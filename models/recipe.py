@@ -6,22 +6,22 @@ from odoo import api, fields, models, _
 
 
 class RecipeRecipe(models.Model):
-    _name = "recipe.recipe"
-    _description = "Recipe"
+    _inherit = "blog.post"
+    _description = "Recipe Maker"
 
-    name = fields.Char("Name", required=True, translate=True)
+    is_recipe = fields.Boolean("Is a Recipe")
     summary = fields.Text("Summary")
-    author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id)
     servings = fields.Integer("Servings")
+    servings_type = fields.Integer("Servings Type")
     calories = fields.Integer("Calories")
     prep_time = fields.Integer("Prep Time")
     cook_time = fields.Integer("Cook Time")
     total_time = fields.Integer("Total Time")
     course_ids = fields.Many2many('recipe.course', string='Course')
-    cuisine_ids = fields.Many2many('recipe.cuisine', string='Course')
-    active = fields.Boolean(string="Active", default=True)
+    cuisine_ids = fields.Many2many('recipe.cuisine', string='Cuisine')
 
-    # ingredient_line = fields.One2many('ingredient.line', 'ingredient_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True)
+    ingredient_line_ids = fields.One2many('ingredient.line', 'recipe_id', string='Ingredients')
+    instruction_line_ids = fields.One2many('instruction.line', 'recipe_id', string='Instructions')
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary("Image", attachment=True,
@@ -45,7 +45,7 @@ class RecipeCourse(models.Model):
     recipe_ids = fields.Many2many('recipe.recipe', string='Recipes')
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Recipe name already exists !"),
+        ('name_uniq', 'unique (name)', "Course already exists !"),
     ]
 
 
@@ -58,5 +58,5 @@ class RecipeCuisine(models.Model):
     recipe_ids = fields.Many2many('recipe.recipe', string='Recipes')
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Recipe name already exists !"),
+        ('name_uniq', 'unique (name)', "Cuisine already exists !"),
     ]
