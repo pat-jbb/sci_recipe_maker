@@ -8,7 +8,7 @@
     'description': """ 
         """,
     'depends': [
-        'base', 'web'
+        'base', 'web', 'website_blog'
     ],
     'data': [
         'security/recipe_security.xml',

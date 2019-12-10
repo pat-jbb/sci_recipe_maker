@@ -10,6 +10,7 @@ class RecipeRecipe(models.Model):
     _description = "Recipe Maker"
 
     is_recipe = fields.Boolean("Is a Recipe")
+    # recipe_name = fields.Char("Recipe Name")
     summary = fields.Text("Summary")
     servings = fields.Integer("Servings")
     servings_type = fields.Integer("Servings Type")

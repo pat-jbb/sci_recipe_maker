@@ -2,104 +2,58 @@
 <odoo>
 
     <menuitem
-            id="menu_faq"
-            name="FAQ"
+            id="menu_recipe_main"
+            name="Recipe"
             parent="website.menu_website_configuration"
-            sequence="30"/>
+            sequence="4"/>
 
-    <!-- FORM VIEW OF FAQ -->
-    <record model='ir.ui.view' id='faq_faq_form'>
-        <field name="name">faq.faq.form</field>
-        <field name="model">faq.faq</field>
+    <!-- RECIPE VIEW IN BLOG FORM -->
+    <record model='ir.ui.view' id='recipe_recipe_form'>
+        <field name="name">blog.post.inherited.form</field>
+        <field name="model">recipe.recipe</field>
+        <field name="inherit_id" ref="website_blog.view_blog_post_form<"/>
         <field name="arch" type="xml">
-            <form string="FAQ">
-                <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive"
-                                groups="base.group_no_one">
-                            <field name="active" widget="boolean_button"
-                                   options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
-                        </button>
-                    </div>
-                    <group>
+            <xpath expr="//field[@name='website_id']" position="after">
+                <field name="is_recipe"/>
+            </xpath>
+            <xpath expr="//group[1]" position="after">
+                <notebook attrs="{'invisible': [('is_recipe', '=', False)]}">
+                    <page string="Recipe Details" name="recipe_details">
                         <group>
-                            <field name="product_id"/>
-                        </group>
-                        <field name="name"/>
-                        <field name="solution"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <!-- TREE VIEW OF FAQ -->
-    <record model='ir.ui.view' id='faq_faq_tree'>
-        <field name="name">faq.faq.tree</field>
-        <field name="model">faq.faq</field>
-        <field name="arch" type="xml">
-            <tree string="FAQ">
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-
-    <!-- SEARCH VIEW OF FAQ -->
-    <record model='ir.ui.view' id='faq_faq_search'>
-        <field name="name">faq.faq.search</field>
-        <field name="model">faq.faq</field>
-        <field name="arch" type="xml">
-            <search string="FAQ">
-                <field name="name"/>
-                <field name="solution"/>
-            </search>
-        </field>
-    </record>
-
-    <!-- ACTION FOR FAQ -->
-    <record model='ir.actions.act_window' id='action_faq_faq'>
-        <field name="name">FAQ</field>
-        <field name="res_model">faq.faq</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a new FAQ.
-            </p>
-        </field>
-    </record>
-
-    <record id="product_faq_form" model="ir.ui.view">
-        <field name="name">product.template.form</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_only_form_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//notebook" position="inside">
-                <page name="faq_faq" string="FAQs">
-                    <field name="faq_ids" colspan="4" nolabel="1">
-                        <tree string="Product Faqs">
-                            <field name="name"/>
-                            <field name="solution"/>
-                        </tree>
-                        <form string="Product Faq">
-                            <div class="oe_button_box" name="button_box">
-                                <button name="toggle_active" type="object" class="oe_stat_button mr-5" icon="fa-archive"
-                                        groups="base.group_no_one">
-                                    <field name="active" widget="boolean_button"
-                                           options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
-                                </button>
-                            </div>
                             <group>
-                                <field name="name"/>
-                                <field name="solution"/>
+                                <field name="image_medium" widget="image" class="oe_avatar"/>
+                                <!--                                <field name="recipe_name"/>-->
+                                <field name="summary"/>
+                                <field name="servings"/>
+                                <field name="servings_type"/>
+                                <field name="calories"/>
+                                <group>
+                                    <group>
+                                        <field name="prep_time"/>
+                                    </group>
+                                    <group>
+                                        <field name="cook_time"/>
+                                    </group>
+                                    <group>
+                                        <field name="total_time"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <field name="course_ids"/>
+                                    </group>
+                                    <group>
+                                        <field name="cuisine_ids"/>
+                                    </group>
+                                </group>
                             </group>
-                        </form>
-                    </field>
-                </page>
+                        </group>
+                    </page>
+                </notebook>
             </xpath>
         </field>
     </record>
 
-    <menuitem action="action_faq_faq" id="menu_faq_faq" name="FAQ" parent="menu_faq" sequence="1"/>
+<!--    <menuitem action="action_faq_faq" id="menu_faq_faq" name="FAQ" parent="menu_faq" sequence="1"/>-->
 
 </odoo>
