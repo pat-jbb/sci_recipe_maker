@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <menuitem
+            id="menu_recipe_main"
+            name="Recipes"
+            parent="website.menu_website_global_configuration"
+            groups="sci_recipe_maker.group_recipe_maker"
+            sequence="120"/>
+
+    <!-- RECIPE VIEW IN BLOG FORM -->
+    <record model='ir.ui.view' id='recipe_recipe_form'>
+        <field name="name">blog.post.recipe.form</field>
+        <field name="model">blog.post</field>
+        <field name="inherit_id" ref="website_blog.view_blog_post_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='website_id']" position="after">
+                <field name="is_recipe"/>
+            </xpath>
+            <xpath expr="//group[1]" position="after">
+                <notebook attrs="{'invisible': [('is_recipe', '=', False)]}">
+                    <page string="Recipe Details" name="recipe_details">
+                        <group>
+                            <group>
+                                <div>
+                                    <label for="summary"/>
+                                    <field name="summary" nolabel="1"/>
+                                </div>
+                                <div>
+                                    <label for="servings"/>
+                                    <field name="servings" nolabel="1"/>
+                                    <label for="servings_type"/>
+                                    <field name="servings_type" nolabel="1"/>
+                                </div>
+                                <div>
+                                    <label for="calories"/>
+                                    <field name="calories" nolabel="1"/>
+                                </div>
+                                <div>
+                                    <div class="mx-2">
+                                        <label for="prep_time"/>
+                                        <field name="prep_time" nolabel="1"/>
+
+                                    </div>
+                                    <div class="mx-2">
+                                        <label for="total_time"/>
+                                        <field name="total_time" nolabel="1"/>
+
+                                    </div>
+                                    <div class="mx-2">
+                                        <label for="cook_time"/>
+                                        <field name="cook_time" nolabel="1"/>
+                                    </div>
+                                </div>
+                                <div class="mx-2">
+                                    <label for="course_ids"/>
+                                    <field name="course_ids" widget="many2many_tags"/>
+                                </div>
+                                <div class="mx-2">
+                                    <label for="cuisine_ids"/>
+                                    <field name="cuisine_ids" widget="many2many_tags"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="image_medium" widget="image" class="oe_avatar float-right" nolabel="1"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Ingredients" name="ingredient_details">
+                        <field name="ingredient_line_ids" nolabel="1" mode="tree">
+                            <tree string="Ingredient Lines" editable="bottom">
+                                <field name="name" string="I" required="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+    <!--    <menuitem action="action_faq_faq" id="menu_faq_faq" name="FAQ" parent="menu_faq" sequence="1"/>-->
+
+</odoo>

@@ -43,7 +43,7 @@ class RecipeCourse(models.Model):
     _order = 'name'
 
     name = fields.Char('Name', required=True, translate=True)
-    recipe_ids = fields.Many2many('recipe.recipe', string='Recipes')
+    blog_ids = fields.Many2many('blog.post', string='Recipes')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Course already exists !"),
@@ -56,7 +56,7 @@ class RecipeCuisine(models.Model):
     _order = 'name'
 
     name = fields.Char('Name', required=True, translate=True)
-    recipe_ids = fields.Many2many('recipe.recipe', string='Recipes')
+    blog_ids = fields.Many2many('blog.post', string='Recipes')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Cuisine already exists !"),

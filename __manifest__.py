@@ -11,9 +11,9 @@
         'base', 'web', 'website_blog'
     ],
     'data': [
-        'security/recipe_security.xml',
+        'security/res_groups.xml',
         'security/ir.model.access.csv',
-        'views/recipe_view.xml',
+        'views/recipe_views.xml',
     ],
     'installable': True,
     'auto_install': False,

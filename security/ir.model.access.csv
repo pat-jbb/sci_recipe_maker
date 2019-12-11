@@ -1,4 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_faq_faq_user,faq.faq.user,model_faq_faq,base.group_user,1,0,0,0
-access_faq_faq_mgr,faq.faq.mgr,model_faq_faq,group_faq_manager,1,1,1,1
-access_faq_admin,faq_faq_admin,model_faq_faq,base.group_erp_manager,1,1,1,1
+access_recipe_course,access_recipe_course,model_recipe_course,base.group_user,1,0,0,0
+access_recipe_course_mgr,access_recipe_course_mgr,model_recipe_course,sci_recipe_maker.group_recipe_maker,1,1,1,1
+access_recipe_cuisine,access_recipe_cuisine,model_recipe_cuisine,base.group_user,1,0,0,0
+access_recipe_cuisine_mgr,access_recipe_cuisine_mgr,model_recipe_cuisine,sci_recipe_maker.group_recipe_maker,1,1,1,1
+access_ingredient_line,access_ingredient_line,model_ingredient_line,base.group_user,1,0,0,0
+access_ingredient_line_mgr,access_ingredient_line_mgr,model_ingredient_line,sci_recipe_maker.group_recipe_maker,1,1,1,1
+access_instruction_line,access_instruction_line,model_instruction_line,base.group_user,1,0,0,0
+access_instruction_line_mgr,access_instruction_line_mgr,model_instruction_line,sci_recipe_maker.group_recipe_maker,1,1,1,1

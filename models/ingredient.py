@@ -7,7 +7,7 @@ class RecipeIngredients(models.Model):
     _description = "Recipe Ingredients"
     _order = "sequence, id"
 
-    name = fields.Text('Instruction', required=True)
+    name = fields.Text('Ingredient', required=True)
     sequence = fields.Integer('Sequence')
-    is_group = fields.Boolean('Instruction Group')
+    is_group = fields.Boolean('Ingredient Group')
     recipe_id = fields.Many2one('blog.post', ondelete='cascade', string='Recipe')
