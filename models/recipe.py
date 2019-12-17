@@ -13,7 +13,7 @@ class RecipeRecipe(models.Model):
     # recipe_name = fields.Char("Recipe Name")
     summary = fields.Text("Summary")
     servings = fields.Integer("Servings")
-    servings_type = fields.Integer("Servings Type")
+    servings_type = fields.Char("Servings Type", default="People")
     calories = fields.Integer("Calories")
     prep_time = fields.Integer("Prep Time")
     cook_time = fields.Integer("Cook Time")

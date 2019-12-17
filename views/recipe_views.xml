@@ -21,55 +21,31 @@
                 <notebook attrs="{'invisible': [('is_recipe', '=', False)]}">
                     <page string="Recipe Details" name="recipe_details">
                         <group>
+                            <field name="image_medium" widget="image" class="oe_avatar"/>
                             <group>
-                                <div>
-                                    <label for="summary"/>
-                                    <field name="summary" nolabel="1"/>
-                                </div>
-                                <div>
-                                    <label for="servings"/>
-                                    <field name="servings" nolabel="1"/>
-                                    <label for="servings_type"/>
-                                    <field name="servings_type" nolabel="1"/>
-                                </div>
-                                <div>
-                                    <label for="calories"/>
-                                    <field name="calories" nolabel="1"/>
-                                </div>
-                                <div>
-                                    <div class="mx-2">
-                                        <label for="prep_time"/>
-                                        <field name="prep_time" nolabel="1"/>
-
-                                    </div>
-                                    <div class="mx-2">
-                                        <label for="total_time"/>
-                                        <field name="total_time" nolabel="1"/>
-
-                                    </div>
-                                    <div class="mx-2">
-                                        <label for="cook_time"/>
-                                        <field name="cook_time" nolabel="1"/>
-                                    </div>
-                                </div>
-                                <div class="mx-2">
-                                    <label for="course_ids"/>
-                                    <field name="course_ids" widget="many2many_tags"/>
-                                </div>
-                                <div class="mx-2">
-                                    <label for="cuisine_ids"/>
-                                    <field name="cuisine_ids" widget="many2many_tags"/>
-                                </div>
+                                <field name="summary"/>
+                                <field name="servings"/>
+                                <field name="servings_type"/>
+                                <field name="calories" string="Calories (kcal)"/>
                             </group>
                             <group>
-                                <field name="image_medium" widget="image" class="oe_avatar float-right" nolabel="1"/>
+                                <field name="prep_time" string="Prep TIme (mins)"/>
+                                <field name="cook_time" string="Cook Time (mins)"/>
+                                <field name="total_time" string="Total Time (mins)"/>
+                                <field name="course_ids" widget="many2many_tags"/>
+                                <field name="cuisine_ids" widget="many2many_tags"/>
                             </group>
                         </group>
                     </page>
-                    <page string="Ingredients" name="ingredient_details">
+                    <page string="Ingredients &amp; Instructions" name="ingredient_details">
                         <field name="ingredient_line_ids" nolabel="1" mode="tree">
                             <tree string="Ingredient Lines" editable="bottom">
-                                <field name="name" string="I" required="1"/>
+                                <field name="sequence" widget="handle"/>
+                                <field name="is_group"/>
+                                <field name="amount"/>
+                                <field name="unit"/>
+                                <field name="name"/>
+                                <field name="notes"/>
                             </tree>
                         </field>
                     </page>
