@@ -20,8 +20,14 @@
             <xpath expr="//group[1]" position="after">
                 <notebook attrs="{'invisible': [('is_recipe', '=', False)]}">
                     <page string="Recipe Details" name="recipe_details">
+                        <field name="image_medium" widget="image" class="oe_avatar" nolabel="1"/>
+                        <div class="oe_title">
+                            <label for="author" string="Author Name"/>
+                            <div name="options">
+                                <field name="author" style="width:50%"/>
+                            </div>
+                        </div>
                         <group>
-                            <field name="image_medium" widget="image" class="oe_avatar"/>
                             <group>
                                 <field name="summary"/>
                                 <field name="servings"/>
@@ -37,17 +43,32 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Ingredients &amp; Instructions" name="ingredient_details">
+                    <page string="Ingredients" name="ingredient_details">
                         <field name="ingredient_line_ids" nolabel="1" mode="tree">
                             <tree string="Ingredient Lines" editable="bottom">
                                 <field name="sequence" widget="handle"/>
-                                <field name="is_group"/>
+                                <field name="is_group" style="width: 5%"/>
                                 <field name="amount"/>
                                 <field name="unit"/>
                                 <field name="name"/>
+                                <field name="product_id"/>
                                 <field name="notes"/>
                             </tree>
                         </field>
+                    </page>
+                    <page string="Instructions" name="instruction_details">
+                        <field name="instruction_line_ids" nolabel="1" mode="tree">
+                            <tree string="Ingredient Lines" editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="is_group" style="width: 5%"/>
+                                <field name="name"/>
+                                <field name="image_medium" widget="image" class="oe_avatar"
+                                       options="{'size': [50, 50]}"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Recipe Notes" name="recipe_notes">
+                        <field name="recipe_notes" nolabel="1"/>
                     </page>
                 </notebook>
             </xpath>

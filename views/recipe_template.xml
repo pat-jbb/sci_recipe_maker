@@ -1,0 +1,117 @@
+<odoo>
+    <template id="recipe_post_template" name="Recipe Post Template">
+        <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id"
+            placeholder="Blog Post Title"/>
+        <i>
+            <span t-field="blog_post.post_date" t-options='{"format": "MMMM dd, yyyy"}'/>
+            by
+            <span t-esc="blog_post.sudo().author_id.name"/>
+            <a class="ml-3" href="#">Leave a Comment</a>
+        </i>
+        <div class="row">
+            <div class="col-lg-6 mt-3">
+                <span t-field="blog_post.image_medium" t-options="{'widget': 'image'}"
+                      t-att-alt="blog_post.name"/>
+            </div>
+            <div class="col-lg-6 my-3">
+                <div class="recipe-times d-flex justify-content-center align-items-center">
+                    <div class="prep-time text-center">
+                        <img class="img" src="" alt="" title=""/>
+                        <h6 class="font-weight-bold my-2">Prep Time</h6>
+                        <span class="text-tertiary" t-esc="blog_post.prep_time"/>
+                    </div>
+                    <div class="cook-time text-center">
+                        <img class="img" src="" alt="" title=""/>
+                        <h6 class="font-weight-bold my-2">Cook Time</h6>
+                        <span class="text-tertiary" t-esc="blog_post.prep_time"/>
+                    </div>
+                    <div class="total-time text-center">
+                        <img class="img" src="" alt="" title=""/>
+                        <h6 class="font-weight-bold my-2">Total Time</h6>
+                        <span class="text-tertiary font-weight-bold" t-esc="blog_post.prep_time"/>
+                    </div>
+                </div>
+                <div t-if="blog_post.summary" class="recipe-summary">
+                    <p class="font-weight-bold my-4" t-field="blog_post.summary" placeholder="Subtitle"/>
+                </div>
+                <div class="recipe-details">
+                    <div t-if="blog_post.course_ids" class="recipe-course my-2">
+                        <span>Course:</span>
+                        <span t-field="blog_post.course_ids"/>
+                    </div>
+                    <div t-if="blog_post.cuisine_ids" class="recipe-cuisine my-2">
+                        <span>Cuisine:</span>
+                        <span t-field="blog_post.cuisine_ids"/>
+                    </div>
+                    <div t-if="blog_post.author" class="recipe-author my-2">
+                        <span>Servings:</span>
+                        <span t-field="blog_post.servings"/>
+                    </div>
+                    <div t-if="blog_post.author" class="recipe-author my-2">
+                        <span>Author:</span>
+                        <span t-field="blog_post.author"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div t-if="blog_post.ingredient_line_ids" class="col-lg-12 mt-5">
+                <h2>Ingredients</h2>
+                <ul class="recipe-ingredients list-unstyled card-columns mb-0">
+                    <t t-foreach="blog_post.ingredient_line_ids" t-as="ingredient">
+                        <li>
+                            <span class="ingredient-amount" t-field="ingredient.amount"/>
+                            <span class="ingredient-unit" t-field="ingredient.unit"/>
+                            <a t-att-href="ingredient.product_id.website_url">
+                                <span class="ingredient-product" t-field="ingredient.name"/>
+                            </a>
+                            <t t-if="ingredient.notes">
+                                ,
+                                <span t-field="ingredient.notes"/>
+                            </t>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div t-if="blog_post.instruction_line_ids" class="col-lg-12 mt-5">
+                <h2>Instructions</h2>
+                <ol class="recipe-instruction mb-0">
+                    <t t-foreach="blog_post.instruction_line_ids" t-as="instruction">
+                        <li>
+                            <span class="instruction-line" t-field="instruction.name"/>
+                        </li>
+                    </t>
+                </ol>
+            </div>
+        </div>
+        <div class="row">
+            <div t-if="blog_post.recipe_notes" class="col-lg-12 mt-5">
+                <h2>Recipe Notes</h2>
+                <p t-field="blog_post.recipe_notes"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="blog_post_complete_inherited" inherit_id="website_blog.blog_post_complete">
+        <xpath expr="//t[@t-call='website_blog.index']" position="inside">
+            <t t-if="blog_post.is_recipe">
+                <section class="recipe">
+                    <div class="container">
+                        <t t-call="sci_recipe_maker.recipe_post_template"/>
+                    </div>
+                </section>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('blog_header')]" position="attributes">
+            <attribute name="t-if">not blog_post.is_recipe</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('blog_content')]" position="attributes">
+            <attribute name="t-if">not blog_post.is_recipe</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_sharing_links')]" position="attributes">
+            <attribute name="t-if">not blog_post.is_recipe</attribute>
+        </xpath>
+    </template>
+</odoo>

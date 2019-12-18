@@ -1,0 +1,19 @@
+.recipe {
+  &-times {
+    .prep-time, .cook-time, .total-time {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+  }
+
+  &-instruction {
+
+  }
+
+
+  @include media-breakpoint-up(sm) {
+    .card-columns {
+      column-count: 2;
+    }
+  }
+}

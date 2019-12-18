@@ -14,6 +14,8 @@
         'security/res_groups.xml',
         'security/ir.model.access.csv',
         'views/recipe_views.xml',
+        'views/recipe_template.xml',
+        'views/recipe_assets.xml',
     ],
     'installable': True,
     'auto_install': False,

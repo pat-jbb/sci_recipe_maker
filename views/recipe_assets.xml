@@ -1,0 +1,8 @@
+<odoo>
+    <template id="recipe_maker_assets" name="Recipe Maker Frontend Assets"
+              inherit_id="website.assets_frontend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/sci_recipe_maker/static/styles/recipe_maker.scss" />
+        </xpath>
+    </template>
+</odoo>

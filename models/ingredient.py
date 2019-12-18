@@ -13,4 +13,5 @@ class RecipeIngredients(models.Model):
     unit = fields.Char("Unit")
     notes = fields.Char("Notes")
     is_group = fields.Boolean("Group")
+    product_id = fields.Many2one('product.product', string="Product")
     recipe_id = fields.Many2one('blog.post', ondelete='cascade', string="Recipe")
