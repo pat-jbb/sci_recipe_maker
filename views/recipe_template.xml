@@ -125,7 +125,7 @@
             <div class="col-lg-12 mt-5">
                 <div class="recipe-about d-flex align-items-center">
                     <div t-field="blog_post.sudo().author_id.image_medium" class="o_not_editable"
-                         t-options='{"widget": "image", "class": "rounded-circle px-3", "resize": "100x100"}'/>
+                         t-options='{"widget": "image", "class": "d-block rounded-circle px-3", "resize": "100x100"}'/>
                     <div class="recipe-about-author">
                         <h4 class="text-black mt-3 mb-2">About
                             <t t-esc="blog_post.sudo().author_id.name"/>
