@@ -18,8 +18,8 @@
                 <field name="is_recipe"/>
             </xpath>
             <xpath expr="//group[1]" position="after">
-                <group string="Recipe Options">
-                    <notebook attrs="{'invisible': [('is_recipe', '=', False)]}">
+                <group string="Recipe Options" attrs="{'invisible': [('is_recipe', '=', False)]}">
+                    <notebook>
                         <page string="Recipe Details" name="recipe_details">
                             <field name="image_medium" widget="image" class="oe_avatar" nolabel="1"/>
                             <div class="oe_title">
