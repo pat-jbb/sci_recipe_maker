@@ -58,8 +58,9 @@ class RecipeRecipe(models.Model):
 
     @api.model
     def has_notes(self):
-        notes = html2plaintext(self.notes)
-        return notes and True or False
+        if self.notes and self.notes == "<p><br></p>":
+            return False
+        return True
 
 
 class RecipeCourse(models.Model):
