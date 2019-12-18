@@ -8,7 +8,7 @@
             <span t-esc="blog_post.sudo().author_id.name"/>
             <a class="ml-3" href="#comments">Leave a Comment</a>
         </i>
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-lg-6 mt-3">
                 <span t-field="blog_post.image_medium" t-options="{'widget': 'image'}"
                       t-att-alt="blog_post.name"/>
@@ -52,7 +52,7 @@
                         <span>Cuisine:</span>
                         <span t-field="blog_post.cuisine_ids"/>
                     </div>
-                    <div t-if="blog_post.author" class="recipe-author my-2">
+                    <div t-if="blog_post.servings" class="recipe-author my-2">
                         <span>Servings:</span>
                         <span t-field="blog_post.servings"/>
                     </div>
@@ -63,48 +63,67 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div t-if="blog_post.ingredient_line_ids" class="col-lg-12 mt-5">
+        <div t-if="blog_post.ingredient_line_ids" class="row">
+            <div class="col-lg-12 mt-5">
                 <h2 class="text-black mb-3">Ingredients</h2>
-                <ul class="recipe-ingredients list-unstyled card-columns mb-0 pl-4">
-                    <t t-foreach="blog_post.ingredient_line_ids" t-as="ingredient">
-                        <li>
-                            <span class="ingredient-amount" t-field="ingredient.amount"/>
-                            <span class="ingredient-unit" t-field="ingredient.unit"/>
-                            <a t-att-href="ingredient.sudo().product_id.website_url">
-                                <span class="ingredient-product" t-field="ingredient.name"/>
-                            </a>
-                            <t t-if="ingredient.notes">
-                                ,
-                                <span t-field="ingredient.notes"/>
-                            </t>
-                        </li>
-                    </t>
-                </ul>
+                <t t-set="ingredient_groups" t-value="blog_post.get_recipe_groups(blog_post.ingredient_line_ids)"/>
+                <t t-foreach="ingredient_groups" t-as="group">
+                    <h5 t-if="group != 'no_group'" class="font-weight-bold mt-3">
+                        <t t-esc="group"/>
+                    </h5>
+                    <ul class="recipe-ingredients list-unstyled card-columns mb-0 pl-4">
+                        <t t-foreach="group_value" t-as="ingredient">
+                            <li>
+                                <!--formatter:off-->
+                                <span class="ingredient-amount" t-field="ingredient.amount"/>
+                                <span class="ingredient-unit" t-field="ingredient.unit"/>
+                                <a t-if="ingredient.sudo().product_id"
+                                   t-att-href="ingredient.sudo().product_id.website_url">
+                                    <span class="ingredient-name" t-field="ingredient.name"/>
+                                    <t t-if="ingredient.notes">,</t>
+                                </a>
+                                <t t-else="">
+                                    <span class="ingredient-name" t-field="ingredient.name"/>
+                                    <t t-if="ingredient.notes">,</t>
+                                </t>
+                                <t t-if="ingredient.notes">
+                                    <span class="ingredient-note" t-field="ingredient.notes"/>
+                                </t>
+                                <!--formatter:on-->
+                            </li>
+                        </t>
+                    </ul>
+                </t>
                 <div class="line mt-5"/>
             </div>
         </div>
-        <div class="row">
-            <div t-if="blog_post.instruction_line_ids" class="col-lg-12 mt-5">
+        <div t-if="blog_post.instruction_line_ids" class="row">
+            <div class="col-lg-12 mt-5">
                 <h2 class="text-black mb-3">Instructions</h2>
-                <ol class="recipe-instruction mb-0">
-                    <t t-foreach="blog_post.instruction_line_ids" t-as="instruction">
-                        <li>
-                            <span class="instruction-line" t-field="instruction.name"/>
-                        </li>
-                    </t>
-                </ol>
+                <t t-set="instruction_groups" t-value="blog_post.get_recipe_groups(blog_post.instruction_line_ids)"/>
+                <t t-foreach="instruction_groups" t-as="group">
+                    <h5 t-if="group != 'no_group'" class="font-weight-bold mt-3">
+                        <t t-esc="group"/>
+                    </h5>
+                    <ol class="recipe-instruction mb-0">
+                        <t t-foreach="group_value" t-as="instruction">
+                            <li>
+                                <span class="instruction-line" t-field="instruction.name"/>
+                            </li>
+                        </t>
+                    </ol>
+                </t>
                 <div class="line mt-5"/>
             </div>
         </div>
-        <div class="row">
-            <div t-if="blog_post.recipe_notes" class="col-lg-12 mt-5">
+        <div t-if="blog_post.recipe_notes" class="row">
+            <div class="col-lg-12 mt-5">
                 <h2 class="text-black mb-3">Recipe Notes</h2>
                 <p t-field="blog_post.recipe_notes"/>
                 <div class="line mt-5"/>
             </div>
         </div>
-        <div class="row">
+        <div t-if="blog_post.about_author" class="row">
             <div class="col-lg-12 mt-5">
                 <div class="recipe-about d-flex align-items-center">
                     <div t-field="blog_post.sudo().author_id.image_medium" class="o_not_editable"
@@ -136,13 +155,11 @@
     <template id="blog_post_complete_inherited" active="False" customize_show="True"
               inherit_id="website_blog.blog_post_complete" name="Recipe Post Override">
         <xpath expr="//t[@t-call='website_blog.index']" position="inside">
-            <t t-if="blog_post.is_recipe">
-                <section class="recipe mt-5">
-                    <div class="container">
-                        <t t-call="sci_recipe_maker.recipe_post_template"/>
-                    </div>
-                </section>
-            </t>
+            <section t-if="blog_post.is_recipe" class="recipe mt-5">
+                <div class="container">
+                    <t t-call="sci_recipe_maker.recipe_post_template"/>
+                </div>
+            </section>
         </xpath>
         <xpath expr="//div[hasclass('blog_header')]" position="attributes">
             <attribute name="t-if">not blog_post.is_recipe</attribute>

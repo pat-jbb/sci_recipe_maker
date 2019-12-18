@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import OrderedDict
 
-from datetime import datetime, timedelta
 from odoo import api, fields, models, _
 
 
@@ -26,7 +25,7 @@ class RecipeRecipe(models.Model):
     ingredient_line_ids = fields.One2many('ingredient.line', 'recipe_id', string='Ingredients')
     instruction_line_ids = fields.One2many('instruction.line', 'recipe_id', string='Instructions')
 
-    recipe_notes = fields.Text("Recipe Notes")
+    notes = fields.Html("Recipe Notes", translate=True)
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary("Image", attachment=True,
                           help="This field holds the image used as avatar for this recipe, limited to 1024x1024px", )
@@ -38,6 +37,24 @@ class RecipeRecipe(models.Model):
                                 help="Small-sized image of this contact. It is automatically " \
                                      "resized as a 64x64px image, with aspect ratio preserved. " \
                                      "Use this field anywhere a small image is required.")
+
+    @api.model
+    def get_recipe_groups(self, obj):
+        group = OrderedDict()
+        group_name = None
+        for line in obj:
+            if line.is_group:
+                group_name = line.name
+                continue
+            if group_name:
+                if not group.get(group_name):
+                    group[group_name] = []
+                group[group_name].append(line)
+            else:
+                if not group.get('no_group'):
+                    group['no_group'] = []
+                group['no_group'].append(line)
+        return group
 
 
 class RecipeCourse(models.Model):

@@ -72,14 +72,12 @@
                             </field>
                         </page>
                         <page string="Recipe Notes" name="recipe_notes">
-                            <field name="recipe_notes" nolabel="1"/>
+                            <field name="notes" widget="html"/>
                         </page>
                     </notebook>
                 </group>
             </xpath>
         </field>
     </record>
-
-    <!--    <menuitem action="action_faq_faq" id="menu_faq_faq" name="FAQ" parent="menu_faq" sequence="1"/>-->
 
 </odoo>
