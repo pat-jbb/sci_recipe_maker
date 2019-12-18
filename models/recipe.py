@@ -58,7 +58,7 @@ class RecipeRecipe(models.Model):
 
     @api.model
     def has_notes(self):
-        if self.notes and self.notes == "<p><br></p>":
+        if bool(self.notes) and self.notes == "<p><br></p>":
             return False
         return True
 
