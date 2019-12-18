@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
-
+from odoo.tools import html2plaintext
 from odoo import api, fields, models, _
 
 
@@ -55,6 +55,10 @@ class RecipeRecipe(models.Model):
                     group['no_group'] = []
                 group['no_group'].append(line)
         return group
+
+    @api.model
+    def get_notes_text(self):
+        return html2plaintext(self.notes)
 
 
 class RecipeCourse(models.Model):

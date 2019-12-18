@@ -74,22 +74,20 @@
                     <ul class="recipe-ingredients list-unstyled card-columns mb-0 pl-4">
                         <t t-foreach="group_value" t-as="ingredient">
                             <li>
-                                <!--formatter:off-->
+                                <!--@formatter:off-->
                                 <span class="ingredient-amount" t-field="ingredient.amount"/>
                                 <span class="ingredient-unit" t-field="ingredient.unit"/>
                                 <a t-if="ingredient.sudo().product_id"
                                    t-att-href="ingredient.sudo().product_id.website_url">
-                                    <span class="ingredient-name" t-field="ingredient.name"/>
-                                    <t t-if="ingredient.notes">,</t>
+                                    <span class="ingredient-name" t-field="ingredient.name"/><t t-if="ingredient.notes">,</t>
                                 </a>
                                 <t t-else="">
-                                    <span class="ingredient-name" t-field="ingredient.name"/>
-                                    <t t-if="ingredient.notes">,</t>
+                                    <span class="ingredient-name" t-field="ingredient.name"/><t t-if="ingredient.notes">,</t>
                                 </t>
                                 <t t-if="ingredient.notes">
                                     <span class="ingredient-note" t-field="ingredient.notes"/>
                                 </t>
-                                <!--formatter:on-->
+                                <!--@formatter:on-->
                             </li>
                         </t>
                     </ul>
@@ -116,10 +114,10 @@
                 <div class="line mt-5"/>
             </div>
         </div>
-        <div t-if="blog_post.notes" class="row">
+        <div t-if="blog_post.get_notes_text()" class="row">
             <div class="col-lg-12 mt-5">
                 <h2 class="text-black mb-3">Recipe Notes</h2>
-                <p t-field="blog_post.notes"/>
+                <div t-field="blog_post.notes"/>
                 <div class="line mt-5"/>
             </div>
         </div>
