@@ -133,7 +133,8 @@
         </div>
     </template>
 
-    <template id="blog_post_complete_inherited" inherit_id="website_blog.blog_post_complete">
+    <template id="blog_post_complete_inherited" active="False" customize_show="True"
+              inherit_id="website_blog.blog_post_complete" name="Recipe Post Override">
         <xpath expr="//t[@t-call='website_blog.index']" position="inside">
             <t t-if="blog_post.is_recipe">
                 <section class="recipe mt-5">

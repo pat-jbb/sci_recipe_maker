@@ -18,59 +18,64 @@
                 <field name="is_recipe"/>
             </xpath>
             <xpath expr="//group[1]" position="after">
-                <notebook attrs="{'invisible': [('is_recipe', '=', False)]}">
-                    <page string="Recipe Details" name="recipe_details">
-                        <field name="image_medium" widget="image" class="oe_avatar" nolabel="1"/>
-                        <div class="oe_title">
-                            <label for="author" string="Author Name"/>
-                            <div name="options">
-                                <field name="author" style="width:50%"/>
+                <group string="Recipe Options">
+                    <notebook attrs="{'invisible': [('is_recipe', '=', False)]}">
+                        <page string="Recipe Details" name="recipe_details">
+                            <field name="image_medium" widget="image" class="oe_avatar" nolabel="1"/>
+                            <div class="oe_title">
+                                <label for="author" string="Author Name" style="font-weight:bold;"/>
+                                <div name="options">
+                                    <field name="author" style="width:50%;"/>
+                                </div>
                             </div>
-                        </div>
-                        <group>
                             <group>
-                                <field name="summary"/>
-                                <field name="servings"/>
-                                <field name="servings_type"/>
-                                <field name="calories" string="Calories (kcal)"/>
+                                <group>
+                                    <field name="summary"/>
+                                    <field name="servings"/>
+                                    <field name="servings_type"/>
+                                    <field name="calories" string="Calories (kcal)"/>
+                                </group>
+                                <group>
+                                    <field name="prep_time" string="Prep TIme (mins)"/>
+                                    <field name="cook_time" string="Cook Time (mins)"/>
+                                    <field name="total_time" string="Total Time (mins)"/>
+                                    <field name="course_ids" widget="many2many_tags"/>
+                                    <field name="cuisine_ids" widget="many2many_tags"/>
+                                </group>
                             </group>
                             <group>
-                                <field name="prep_time" string="Prep TIme (mins)"/>
-                                <field name="cook_time" string="Cook Time (mins)"/>
-                                <field name="total_time" string="Total Time (mins)"/>
-                                <field name="course_ids" widget="many2many_tags"/>
-                                <field name="cuisine_ids" widget="many2many_tags"/>
+                                <field name="about_author"/>
                             </group>
-                        </group>
-                    </page>
-                    <page string="Ingredients" name="ingredient_details">
-                        <field name="ingredient_line_ids" nolabel="1" mode="tree">
-                            <tree string="Ingredient Lines" editable="bottom">
-                                <field name="sequence" widget="handle"/>
-                                <field name="is_group" style="width: 5%"/>
-                                <field name="amount"/>
-                                <field name="unit"/>
-                                <field name="name"/>
-                                <field name="product_id"/>
-                                <field name="notes"/>
-                            </tree>
-                        </field>
-                    </page>
-                    <page string="Instructions" name="instruction_details">
-                        <field name="instruction_line_ids" nolabel="1" mode="tree">
-                            <tree string="Ingredient Lines" editable="bottom">
-                                <field name="sequence" widget="handle"/>
-                                <field name="is_group" style="width: 5%"/>
-                                <field name="name"/>
-                                <field name="image_medium" widget="image" class="oe_avatar"
-                                       options="{'size': [50, 50]}"/>
-                            </tree>
-                        </field>
-                    </page>
-                    <page string="Recipe Notes" name="recipe_notes">
-                        <field name="recipe_notes" nolabel="1"/>
-                    </page>
-                </notebook>
+                        </page>
+                        <page string="Ingredients" name="ingredient_details">
+                            <field name="ingredient_line_ids" nolabel="1" mode="tree">
+                                <tree string="Ingredient Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="is_group" style="width: 5%"/>
+                                    <field name="amount"/>
+                                    <field name="unit"/>
+                                    <field name="name"/>
+                                    <field name="product_id"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Instructions" name="instruction_details">
+                            <field name="instruction_line_ids" nolabel="1" mode="tree">
+                                <tree string="Ingredient Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="is_group" style="width: 5%"/>
+                                    <field name="name"/>
+                                    <field name="image_medium" widget="image" class="oe_avatar"
+                                           options="{'size': [50, 50]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Recipe Notes" name="recipe_notes">
+                            <field name="recipe_notes" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </group>
             </xpath>
         </field>
     </record>
