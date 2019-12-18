@@ -57,8 +57,9 @@ class RecipeRecipe(models.Model):
         return group
 
     @api.model
-    def get_notes_text(self):
-        return html2plaintext(self.notes)
+    def has_notes(self):
+        notes = html2plaintext(self.notes)
+        return notes and True or False
 
 
 class RecipeCourse(models.Model):
