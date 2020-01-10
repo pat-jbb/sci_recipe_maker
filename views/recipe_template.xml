@@ -17,7 +17,7 @@
                 <div class="recipe-times d-flex justify-content-center align-items-center mb-2">
                     <div class="prep-time text-center">
                         <img class="img" src="/sci_recipe_maker/static/images/prep-time.png" alt="" title=""/>
-                        <h6 class="font-weight-bold my-2">Prep Time</h6>
+                        <h6 class="font-weight-bold my-2 text-black">Prep Time</h6>
                         <span class="text-tertiary">
                             <t t-esc="blog_post.prep_time"/>
                             mins
@@ -25,7 +25,7 @@
                     </div>
                     <div class="cook-time text-center">
                         <img class="img" src="/sci_recipe_maker/static/images/cook-time.png" alt="" title=""/>
-                        <h6 class="font-weight-bold my-2">Cook Time</h6>
+                        <h6 class="font-weight-bold my-2 text-black">Cook Time</h6>
                         <span class="text-tertiary">
                             <t t-esc="blog_post.cook_time"/>
                             mins
@@ -33,7 +33,7 @@
                     </div>
                     <div class="total-time text-center">
                         <img class="img" src="/sci_recipe_maker/static/images/total-time.png" alt="" title=""/>
-                        <h6 class="font-weight-bold my-2">Total Time</h6>
+                        <h6 class="font-weight-bold my-2 text-black">Total Time</h6>
                         <span class="text-tertiary font-weight-bold">
                             <t t-esc="blog_post.total_time"/>
                             mins
@@ -77,8 +77,8 @@
                                 <!--@formatter:off-->
                                 <span class="ingredient-amount" t-field="ingredient.amount"/>
                                 <span class="ingredient-unit" t-field="ingredient.unit"/>
-                                <a t-if="ingredient.sudo().product_id"
-                                   t-att-href="ingredient.sudo().product_id.website_url">
+                                <a t-if="ingredient.sudo().product_id and ingredient.sudo().product_id.website_published"
+                                   t-att-href="'/shop/product/%s' % slug(ingredient.sudo().product_id)">
                                     <span class="ingredient-name" t-field="ingredient.name"/><t t-if="ingredient.notes">,</t>
                                 </a>
                                 <t t-else="">
@@ -124,10 +124,10 @@
         <div t-if="blog_post.about_author" class="row">
             <div class="col-lg-12 mt-5">
                 <div class="recipe-about d-flex align-items-center">
-                    <div t-field="blog_post.sudo().author_id.image_medium" class="o_not_editable"
-                         t-options='{"widget": "image", "class": "d-block rounded-circle px-3", "resize": "100x100"}'/>
+                    <div t-field="blog_post.sudo().author_id.image" class="o_not_editable"
+                         t-options='{"widget": "image", "class": "d-block rounded-circle px-3", "resize": "150x150"}'/>
                     <div class="recipe-about-author">
-                        <h4 class="text-black mt-3 mb-2">About
+                        <h4 class="mb-2">About
                             <t t-esc="blog_post.sudo().author_id.name"/>
                         </h4>
                         <p class="mb-0" t-field="blog_post.about_author"/>
