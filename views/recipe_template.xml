@@ -1,4 +1,134 @@
 <odoo>
+
+    <template id="recipe_schema_jsonld" name="Recipe Schema Markup Using JSONLD">
+        <t t-if="blog_post.is_recipe">
+            {
+            "@context": "https://schema.org",
+            "@graph": [
+            {
+            "@type": "WebSite",
+            "@id": "https://qualifirst.com/#website",
+            "url": "https://qualifirst.com/",
+            "name": "Qualifirst Blog",
+            "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://qualifirst.com/search?q={search_term_string}",
+            "query-input": "required q=search_term_string"
+            }
+            },
+            {
+            "@type": "ImageObject",
+            "@id": "https://blog.qualifirst.com/vegan-white-beans-with-smoked-nuckhen-recipe/#primaryimage",
+            "url": "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans.jpg",
+            "width": 3170,
+            "height": 1642,
+            "caption": "Vegan White Beans with Smoked Nuckhen on a Board"
+            },
+            {
+            "@type": "WebPage",
+            "@id": "https://blog.qualifirst.com/vegan-white-beans-with-smoked-nuckhen-recipe/#webpage",
+            "url": "https://blog.qualifirst.com/vegan-white-beans-with-smoked-nuckhen-recipe/",
+            "inLanguage": "en-US",
+            "name": "Vegan White Beans with Smoked Nuckhen Recipe - THE new vegan meat.",
+            "isPartOf": {
+            "@id": "https://blog.qualifirst.com/#website"
+            },
+            "primaryImageOfPage": {
+            "@id": "https://blog.qualifirst.com/vegan-white-beans-with-smoked-nuckhen-recipe/#primaryimage"
+            },
+            "datePublished": "2018-04-24T18:39:47+00:00",
+            "dateModified": "2019-01-11T19:35:56+00:00",
+            "author": {
+            "@id": "https://blog.qualifirst.com/#/schema/person/d89e1f0edb9e60a39900bb2afadafa00"
+            },
+            "description": "<t t-esc="blog_post.summary"/>"
+            },
+            {
+            "@type": [
+            "Person"
+            ],
+            "@id": "https://blog.qualifirst.com/#/schema/person/d89e1f0edb9e60a39900bb2afadafa00",
+            "name": "Jodi MacKinnon",
+            "image": {
+            "@type": "ImageObject",
+            "@id": "https://blog.qualifirst.com/#authorlogo",
+            "url": "https://secure.gravatar.com/avatar/2e8bdccfdb31ebf69b341ea130dd8c99?s=96&amp;d=mm&amp;r=g",
+            "caption": "Jodi MacKinnon"
+            },
+            "description": "Qualifirst's COO, Jodi loves cooking and baking. Taking raw ingredients and turning them
+            into something that is absolutely delicious, with just the right flavor balance, is one of her favorite
+            pastimes.",
+            "sameAs": [
+            "https://www.linkedin.com/in/jodi-mackinnon-9511b620/"
+            ]
+            },
+            {
+            "@context": "http://schema.org/",
+            "@type": "Recipe",
+            "name": "<t t-esc="blog_post.name"/>",
+            "author": {
+            "@type": "Person",
+            "name": "<t t-esc="blog_post.author"/>"
+            },
+            "description": "<t t-esc="blog_post.summary"/>",
+            "datePublished": "2018-04-24T13:39:47+00:00",
+            "image": [
+            "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans.jpg",
+            "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans-500x500.jpg",
+            "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans-500x375.jpg",
+            "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans-480x270.jpg"
+            ],
+            <t t-if="blog_post.prep_time">
+                "prepTime": "PT<t t-esc="blog_post.prep_time"/>M",
+            </t>
+            <t t-if="blog_post.cook_time">
+                "cookTime": "PT<t t-esc="blog_post.cook_time"/>M",
+            </t>
+            <t t-if="blog_post.total_time">
+                "totalTime": "PT<t t-esc="blog_post.total_time"/>M",
+            </t>
+            "recipeIngredient": [
+            <t t-foreach="blog_post.ingredient_line_ids" t-as="ingredient">
+                "
+                <t t-esc="ingredient.amount"/>
+                <t t-esc="ingredient.unit"/>
+                <t t-esc="ingredient.name"/>
+                <t t-if="ingredient.notes">,
+                    <t t-esc="ingredient.notes"/>
+                </t>
+                ",
+            </t>
+
+            ],
+            "recipeInstructions": [
+            <t t-foreach="blog_post.instruction_line_ids" t-as="instruction">
+                {
+                "@type": "HowToStep",
+                "text": "<t t-esc="instruction.name"/>"
+                },
+            </t>
+            ],
+            "recipeCategory": [
+            "Main"
+            ],
+            <t t-if="blog_post.cuisine_ids">
+                "recipeCuisine": [
+                <t t-foreach="blog_post.cuisine_ids" t-as="cuisine">
+                    "<t t-esc="cuisine.name"/>"
+                </t>
+                ],
+            </t>
+            "@id": "https://blog.qualifirst.com/vegan-white-beans-with-smoked-nuckhen-recipe/#recipe",
+            "isPartOf": {
+            "@id": "https://blog.qualifirst.com/vegan-white-beans-with-smoked-nuckhen-recipe/#webpage"
+            },
+            "mainEntityOfPage": "https://blog.qualifirst.com/vegan-white-beans-with-smoked-nuckhen-recipe/#webpage"
+            }
+            ]
+            }
+        </t>
+    </template>
+
     <template id="recipe_post_template" name="Recipe Post Template">
         <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id"
             placeholder="Blog Post Title"/>
