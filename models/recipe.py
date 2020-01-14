@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
 from odoo.tools import html2plaintext
+from odoo.http import request
 from odoo import api, fields, models, _
 
 
@@ -9,6 +10,7 @@ class RecipeRecipe(models.Model):
     _description = "Recipe Maker"
 
     is_recipe = fields.Boolean("Is a Recipe")
+    is_featured_gourmet = fields.Boolean("Is Featured Gourmet")
     # recipe_name = fields.Char("Recipe Name")
     summary = fields.Text("Summary")
     author = fields.Char("Author")
@@ -63,9 +65,26 @@ class RecipeRecipe(models.Model):
         return True
 
 
+class RecipeTag(models.Model):
+    _inherit = "blog.tag"
+
+    website_id = fields.Many2one('website', string='Website', help='Restrict publishing to this website.')
+
+    @api.multi
+    def can_access_from_current_website(self, website_id=False):
+        can_access = True
+        for record in self:
+            if (website_id or record.website_id.id) not in (False, request.website.id):
+                can_access = False
+                continue
+        return can_access
+
+
+
 class RecipeCourse(models.Model):
     _name = 'recipe.course'
     _description = 'Course Recipe'
+    _inherit = "website.multi.mixin"
     _order = 'name'
 
     name = fields.Char('Name', required=True, translate=True)
@@ -79,6 +98,7 @@ class RecipeCourse(models.Model):
 class RecipeCuisine(models.Model):
     _name = 'recipe.cuisine'
     _description = 'Cuisine Recipe'
+    _inherit = "website.multi.mixin"
     _order = 'name'
 
     name = fields.Char('Name', required=True, translate=True)

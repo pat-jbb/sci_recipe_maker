@@ -30,6 +30,7 @@
                             </div>
                             <group>
                                 <group>
+                                    <field name="is_featured_gourmet"/>
                                     <field name="summary"/>
                                     <field name="servings"/>
                                     <field name="servings_type"/>
@@ -80,4 +81,114 @@
         </field>
     </record>
 
+    <record model='ir.ui.view' id='blog_tag_recipe_form'>
+        <field name="name">blog.tag.recipe.form</field>
+        <field name="model">blog.tag</field>
+        <field name="inherit_id" ref="website_blog.blog_tag_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="website_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='recipe_course_form'>
+        <field name="name">recipe.course.form</field>
+        <field name="model">recipe.course</field>
+        <field name="arch" type="xml">
+            <form string="Courses">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="website_id"/>
+                        </group>
+                        <label for="blog_ids" string="Used in: "/>
+                        <field name="blog_ids"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- TREE VIEW OF FAQ -->
+    <record model='ir.ui.view' id='recipe_course_tree'>
+        <field name="name">recipe.course.tree</field>
+        <field name="model">recipe.course</field>
+        <field name="arch" type="xml">
+            <tree string="Courses">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ACTION FOR FAQ -->
+    <record model='ir.actions.act_window' id='action_recipe_course'>
+        <field name="name">Course</field>
+        <field name="res_model">recipe.course</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new Course.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            id="menu_recipe_course"
+            name="Courses"
+            parent="sci_recipe_maker.menu_recipe_main"
+            action="action_recipe_course"
+            sequence="20"/>
+
+    <record model='ir.ui.view' id='recipe_cuisine_form'>
+        <field name="name">recipe.cuisine.form</field>
+        <field name="model">recipe.cuisine</field>
+        <field name="arch" type="xml">
+            <form string="Cuisines">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="website_id"/>
+                        </group>
+                        <label for="blog_ids" string="Used in: "/>
+                        <field name="blog_ids"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- TREE VIEW OF FAQ -->
+    <record model='ir.ui.view' id='recipe_cuisine_tree'>
+        <field name="name">recipe.cuisine.tree</field>
+        <field name="model">recipe.cuisine</field>
+        <field name="arch" type="xml">
+            <tree string="Cuisines">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ACTION FOR FAQ -->
+    <record model='ir.actions.act_window' id='action_recipe_cuisine'>
+        <field name="name">Cuisine</field>
+        <field name="res_model">recipe.cuisine</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new Cuisine.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            id="menu_recipe_cuisine"
+            name="Cuisines"
+            parent="sci_recipe_maker.menu_recipe_main"
+            action="action_recipe_cuisine"
+            sequence="40"/>
 </odoo>
