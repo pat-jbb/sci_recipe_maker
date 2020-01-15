@@ -15,7 +15,7 @@ class WebsiteBlog(WebsiteBlog):
     def recipe_tags(self, tag=None, page=1, **post):
 
         if not tag:
-             return werkzeug.utils.redirect('/blog')
+            return werkzeug.utils.redirect('/blog')
 
         if not tag.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
@@ -40,5 +40,3 @@ class WebsiteBlog(WebsiteBlog):
             'blog': course,
             'blog_posts': course.blog_ids,
         })
-
-
