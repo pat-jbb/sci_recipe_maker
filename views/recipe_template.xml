@@ -1,141 +1,5 @@
 <odoo>
 
-    <template id="recipe_schema_jsonld" name="Recipe Schema Markup Using JSONLD">
-        <t t-if="blog_post.is_recipe">
-            <t t-set="base_url" t-value="blog_post.website_id and blog_post.website_id.domain.rstrip('/')"/>
-            <t t-set="post_url" t-value="'%s/blog/%s/post/%s/#wrap' % (base_url, slug(blog_post.blog_id), slug(blog_post)"/>
-            {
-            "@context": "https://schema.org",
-            "@graph": [
-            {
-            "@type": "WebSite",
-            "@id": "<t t-esc="base_url"/>/#wrap",
-            "url": "<t t-esc="base_url"/>",
-            "name": "Qualifirst Blog",
-            "potentialAction": {
-            "@type": "SearchAction",
-            "target": "<t t-esc="base_url"/>/search?q={search_term_string}",
-            "query-input": "required q=search_term_string"
-            }
-            },
-            {
-            "@type": "ImageObject",
-            "@id": "<t t-esc="post_url"/>/#primaryimage",
-            "url": "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans.jpg",
-            "width": 3170,
-            "height": 1642,
-            "caption": "Vegan White Beans with Smoked Nuckhen on a Board"
-            },
-            {
-            "@type": "WebPage",
-            "@id": "<t t-esc="base_url"/>/#wrap",
-            "url": "<t t-esc="base_url"/>",
-            "inLanguage": "en-US",
-            <!--TODO: Add meta fields-->
-            "name": "Vegan White Beans with Smoked Nuckhen Recipe - THE new vegan meat.",
-            "isPartOf": {
-            "@id": "<t t-esc="base_url"/>/#website"
-            },
-            "primaryImageOfPage": {
-            "@id": "<t t-esc="base_url"/>/#primaryimage"
-            },
-            "datePublished": "2018-04-24T18:39:47+00:00",
-            "dateModified": "2019-01-11T19:35:56+00:00",
-            "author": {
-            <!--TODO: Check person schema in the old blog site-->
-            "@id": "https://blog.qualifirst.com/#/schema/person/d89e1f0edb9e60a39900bb2afadafa00"
-            },
-            "description": "<t t-esc="blog_post.summary"/>"
-            },
-            {
-            "@type": [
-            "Person"
-            ],
-            "@id": "https://blog.qualifirst.com/#/schema/person/d89e1f0edb9e60a39900bb2afadafa00",
-            "name": "Jodi MacKinnon",
-            "image": {
-            "@type": "ImageObject",
-            "@id": "https://blog.qualifirst.com/#authorlogo",
-            "url": "https://secure.gravatar.com/avatar/2e8bdccfdb31ebf69b341ea130dd8c99?s=96&amp;d=mm&amp;r=g",
-            "caption": "Jodi MacKinnon"
-            },
-            <!--TODO: Inherit res partner and add about author description-->
-            "description": "Qualifirst's COO, Jodi loves cooking and baking. Taking raw ingredients and turning them
-            into something that is absolutely delicious, with just the right flavor balance, is one of her favorite
-            pastimes.",
-            "sameAs": [
-            <!--TODO: Check for author's social urls-->
-            "https://www.linkedin.com/in/jodi-mackinnon-9511b620/"
-            ]
-            },
-            {
-            "@context": "http://schema.org/",
-            "@type": "Recipe",
-            "name": "<t t-esc="blog_post.name"/>",
-            "author": {
-            "@type": "Person",
-            "name": "<t t-esc="blog_post.author"/>"
-            },
-            "description": "<t t-esc="blog_post.summary"/>",
-            <!--TODO: Add a method that formats the publishing date-->
-            "datePublished": "2018-04-24T13:39:47+00:00",
-            "image": [
-            "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans.jpg",
-            "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans-500x500.jpg",
-            "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans-500x375.jpg",
-            "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans-480x270.jpg"
-            ],
-            <t t-if="blog_post.prep_time">
-                "prepTime": "PT<t t-esc="blog_post.prep_time"/>M",
-            </t>
-            <t t-if="blog_post.cook_time">
-                "cookTime": "PT<t t-esc="blog_post.cook_time"/>M",
-            </t>
-            <t t-if="blog_post.total_time">
-                "totalTime": "PT<t t-esc="blog_post.total_time"/>M",
-            </t>
-            "recipeIngredient": [
-            <t t-foreach="blog_post.ingredient_line_ids" t-as="ingredient">
-                "
-                <t t-esc="ingredient.amount"/>
-                <t t-esc="ingredient.unit"/>
-                <t t-esc="ingredient.name"/>
-                <t t-if="ingredient.notes">,
-                    <t t-esc="ingredient.notes"/>
-                </t>
-                ",
-            </t>
-
-            ],
-            "recipeInstructions": [
-            <t t-foreach="blog_post.instruction_line_ids" t-as="instruction">
-                {
-                "@type": "HowToStep",
-                "text": "<t t-esc="instruction.name"/>"
-                },
-            </t>
-            ],
-            "recipeCategory": [
-            "Main"
-            ],
-            <t t-if="blog_post.cuisine_ids">
-                "recipeCuisine": [
-                <t t-foreach="blog_post.cuisine_ids" t-as="cuisine">
-                    "<t t-esc="cuisine.name"/>"
-                </t>
-                ],
-            </t>
-            "@id": "<t t-esc="post_url"/>/#recipe",
-            "isPartOf": {
-            "@id": "<t t-esc="post_url"/>/#wrap"
-            },
-            "mainEntityOfPage": "<t t-esc="post_url"/>/#wrap"
-            }
-            ]
-            }
-        </t>
-    </template>
-
     <template id="recipe_post_template" name="Recipe Post Template">
         <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id"
             placeholder="Blog Post Title"/>
@@ -147,7 +11,8 @@
         </i>
         <div class="row align-items-center">
             <div class="col-lg-6 mt-3">
-                <span t-field="blog_post.image_medium" t-options="{'widget': 'image'}"
+                <span t-field="blog_post.image_medium"
+                      t-options="{'widget': 'image', 'alt': blog_post.image_caption or '%s Image' % blog_post.name}"
                       t-att-alt="blog_post.name"/>
             </div>
             <div class="col-lg-6 my-3">
@@ -290,6 +155,9 @@
     <template id="blog_post_complete_inherited" active="False" customize_show="True"
               inherit_id="website_blog.blog_post_complete" name="Recipe Post Override">
         <xpath expr="//t[@t-call='website_blog.index']" position="inside">
+            <t t-set="head">
+                <script type="application/ld+json" t-raw="blog_post.get_structured_data()"/>
+            </t>
             <section t-if="blog_post.is_recipe" class="recipe mt-5">
                 <div class="container">
                     <t t-call="sci_recipe_maker.recipe_post_template"/>

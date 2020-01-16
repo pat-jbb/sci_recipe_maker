@@ -13,6 +13,8 @@
         'security/res_groups.xml',
         'security/ir.model.access.csv',
         'views/recipe_views.xml',
+        'views/blog_seo_views.xml',
+        'views/partner_views.xml',
         'views/recipe_template.xml',
         'views/recipe_assets.xml',
     ],

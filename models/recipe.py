@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
 from odoo.tools import html2plaintext
+import json
 from odoo.http import request
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
@@ -11,11 +12,11 @@ class RecipeRecipe(models.Model):
     _description = "Recipe Maker"
 
     is_recipe = fields.Boolean("Is a Recipe")
-    is_featured_gourmet = fields.Boolean("Is Featured Gourmet")
+    is_featured_gourmet = fields.Boolean("Featured Gourmet")
     # recipe_name = fields.Char("Recipe Name")
     # TODO: Remove summary and transfer to tge default subtitle field
     summary = fields.Text("Summary")
-    author = fields.Char("Author")
+    author = fields.Char("Author Name")
     about_author = fields.Text("About the Author")
     servings = fields.Char("Servings")
     servings_type = fields.Char("Servings Type", default="People")
@@ -32,7 +33,7 @@ class RecipeRecipe(models.Model):
     instruction_line_ids = fields.One2many('instruction.line', 'recipe_id', string='Instructions')
 
     notes = fields.Html("Recipe Notes", translate=True)
-    image_caption = fields.Char("Recipe Image Caption")
+    image_caption = fields.Char("Image Caption")
     image = fields.Binary("Image", attachment=True,
                           help="This field holds the image used as avatar for this recipe, limited to 1024x1024px", )
     image_medium = fields.Binary("Medium-sized image", attachment=True,
@@ -72,10 +73,11 @@ class RecipeRecipe(models.Model):
             return False
         return True
 
-    def _get_structured_data(self):
+    @api.multi
+    def get_structured_data(self):
         self.ensure_one()
         base_url = self.website_id and self.website_id.domain.rstrip('/')
-        post_url = '%s/blog/%s/post/%s/#wrap' % (base_url, slug(self.blog_id), slug(self))
+        post_url = '%s/blog/%s/post/%s' % (base_url, slug(self.blog_id), slug(self))
         author_name = self.sudo().author_id.name
 
         data = {"@context": "https://schema.org",
@@ -96,8 +98,7 @@ class RecipeRecipe(models.Model):
                         "@id": "%s/#wrap" % base_url,
                         "url": "%s" % base_url,
                         "inLanguage": "en-US",
-                        # TODO: Add meta fields
-                        "name": "Vegan White Beans with Smoked Nuckhen Recipe - THE new vegan meat.",
+                        "name": "%s" % self.website_meta_title,
                         "isPartOf": {
                             "@id": "%s/#website" % base_url
                         },
@@ -123,15 +124,11 @@ class RecipeRecipe(models.Model):
                         "image": {
                             "@type": "ImageObject",
                             "@id": "%s/#authorlogo" % base_url,
-                            "url": "%s" % self.sudo().author_id.gravatar_image_url,
+                            "url": "%s" % (self.sudo().author_id.gravatar_image_url or ''),
                             "caption": "%s" % author_name
                         },
-                        # TODO: Inherit res partner and add about author description
                         "description": "%s" % self.sudo().author_id.about_author,
-                        "sameAs": [
-                            # TODO: Check for author's social urls
-                            "https://www.linkedin.com/in/jodi-mackinnon-9511b620/"
-                        ]
+                        "sameAs": self.sudo().author_id.get_partner_social()
                     },
                     {
                         "@context": "http://schema.org/",
@@ -139,17 +136,14 @@ class RecipeRecipe(models.Model):
                         "name": "%s" % self.name,
                         "author": {
                             "@type": "Person",
-                            "name": "%s" % self.author or author_name
+                            "name": "%s" % (self.author or author_name)
                         },
                         "description": "%s" % self.subtitle,
                         # TODO: Add a method that formats the publishing date-->
                         "datePublished": "2018-04-24T13:39:47+00:00",
                         # TODO: Get all images?
                         "image": [
-                            "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans.jpg",
-                            "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans-500x500.jpg",
-                            "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans-500x375.jpg",
-                            "https://blog.qualifirst.com/wp-content/uploads/2018/04/Nuckhen-Beans-480x270.jpg"
+                            "%s/web/image/blog.post/%s/image_medium" % (base_url, self.id),
                         ],
                         # TODO: Add a method that adds converts minutes to hour-minute format
                         "prepTime": "PT%sM" % self.prep_time,
@@ -160,14 +154,13 @@ class RecipeRecipe(models.Model):
                             "%s%s%s%s" % (
                                 ing.amount or '', ing.unit and ' %s' % ing.unit or '',
                                 ing.name and ' %s' % ing.name or '',
-                                ing.note and ', %s' % ing.note or '') for ing in self.ingredient_line_ids
+                                ing.notes and ', %s' % ing.notes or '') for ing in self.ingredient_line_ids
                         ],
                         "recipeInstructions": [{
                             "@type": "HowToStep",
                             "text": "%s" % ins.name
                         } for ins in self.instruction_line_ids
                         ],
-                        # TODO: Check other categories (Course??)
                         "recipeCategory": [course.name for course in self.course_ids],
                         "recipeCuisine": [cuisine.name for cuisine in self.cuisine_ids],
                         "@id": "%s/#recipe" % post_url,
@@ -185,11 +178,10 @@ class RecipeRecipe(models.Model):
                 "url": "%s/web/image/blog.post/%s/image_medium" % (base_url, self.id),
                 # "width": 3170,
                 # "height": 1642,
-                # TODO: Add main image caption field
                 "caption": "%s" % self.image_caption or '%s Image' % self.name
             })
 
-        return
+        return json.dumps(data)
 
 
 class RecipeTag(models.Model):

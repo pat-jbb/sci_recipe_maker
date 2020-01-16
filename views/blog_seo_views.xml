@@ -1,0 +1,17 @@
+<odoo>
+    <record model='ir.ui.view' id='blog_seo_form_inherited'>
+        <field name="name">blog.post.seo</field>
+        <field name="model">blog.post</field>
+        <field name="inherit_id" ref="website_blog.view_blog_post_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='author_id']/.." position="before">
+                <group string="SEO Options">
+                    <field name="website_meta_title" string="SEO Title" placeholder="Limit to 30-60 characters"/>
+                    <field name="website_meta_description" string="Meta Description"
+                           placeholder="Limit to 50-160 characters"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

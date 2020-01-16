@@ -1,0 +1,30 @@
+<odoo>
+    <record model='ir.ui.view' id='blog_partner_form_inherited'>
+        <field name="name">blog.partner.inherited</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Blog &amp; Social Media">
+                    <group>
+                        <group string="Blog Info">
+                            <label for="gravatar_image_url"/>
+                            <field name="gravatar_image_url" nolabel="1"/>
+                            <label for="about_author"/>
+                            <field name="about_author" nolabel="1"/>
+                        </group>
+                        <group string="Social Media">
+                            <field name="social_twitter"/>
+                            <field name="social_facebook"/>
+                            <field name="social_github"/>
+                            <field name="social_linkedin"/>
+                            <field name="social_youtube"/>
+                            <field name="social_googleplus"/>
+                            <field name="social_instagram"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
