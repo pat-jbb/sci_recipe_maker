@@ -1,5 +1,51 @@
 <odoo>
 
+    <template i="recipe_snippet" name="Recipe Snippet">
+        <div class="row">
+            <t t-if="p.image">
+                <div class="thumb d-flex align-items-center" style="height:200px;overflow:hidden;"
+                     t-field="p.image" t-options="{'widget': 'image'}"/>
+            </t>
+            <div class="mt-4">
+                <a class="text-decoration-none" t-att-href="p.website_url">
+                    <h5 class="font-weight-bold text-black" t-field="p.name"/>
+                </a>
+                <i>
+                    <span t-field="p.post_date" t-options='{"format": "MMMM dd, yyyy"}'/>
+                    by
+                    <span t-esc="p.sudo().author_id.name"/>
+                </i>
+                <p class="mt-3" t-field="p.teaser"/>
+                <a class="text-underline" t-att-href="p.website_url">Read More</a>
+            </div>
+        </div>
+    </template>
+    <template i="product_recipe_snippet" name="Product Recipe Snippet">
+        <t t-foreach="posts" t-as="p">
+            <t t-set="properties" t-value="json.loads(p.cover_properties)"/>
+            <div class="col-lg-4 my-3 loading_container s_latest_posts_post">
+                <t t-call="sci_recipe_maker.recipe_snippet"/>
+            </div>
+        </t>
+    </template>
+
+    <template i="sidebar_recipe_snippet" name="Sidebar Recipe Snippet">
+        <t t-foreach="posts" t-as="p">
+            <t t-set="properties" t-value="json.loads(p.cover_properties)"/>
+            <div class="col-lg-12 my-3 loading_container s_latest_posts_post">
+                <t t-call="sci_recipe_maker.recipe_snippet"/>
+            </div>
+        </t>
+    </template>
+
+    <template i="homepage_recipe_snippet" name="Homepage Recipe Snippet">
+        <t t-foreach="posts" t-as="p">
+            <t t-set="properties" t-value="json.loads(p.cover_properties)"/>
+            <div class="col-lg-3 my-3 loading_container s_latest_posts_post">
+                <t t-call="sci_recipe_maker.recipe_snippet"/>
+            </div>
+        </t>
+    </template>
     <template id="recipe_post_template" name="Recipe Post Template">
         <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id"
             placeholder="Blog Post Title"/>
@@ -81,10 +127,12 @@
                                 <span class="ingredient-unit" t-field="ingredient.unit"/>
                                 <a t-if="ingredient.sudo().product_id and ingredient.sudo().product_id.website_published"
                                    t-att-href="'/shop/product/%s' % slug(ingredient.sudo().product_id)">
-                                    <span class="ingredient-name" t-field="ingredient.name"/><t t-if="ingredient.notes">,</t>
+                                    <span class="ingredient-name" t-field="ingredient.name"/>
+                                    <t t-if="ingredient.notes">,</t>
                                 </a>
                                 <t t-else="">
-                                    <span class="ingredient-name" t-field="ingredient.name"/><t t-if="ingredient.notes">,</t>
+                                    <span class="ingredient-name" t-field="ingredient.name"/>
+                                    <t t-if="ingredient.notes">,</t>
                                 </t>
                                 <t t-if="ingredient.notes">
                                     <span class="ingredient-note" t-field="ingredient.notes"/>
