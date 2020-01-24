@@ -48,9 +48,6 @@
                                     <field name="cuisine_ids" widget="many2many_tags"/>
                                 </group>
                             </group>
-                            <group>
-                                <field name="about_author"/>
-                            </group>
                         </page>
                         <page string="Ingredients" name="ingredient_details">
                             <field name="ingredient_line_ids" nolabel="1" mode="tree">
