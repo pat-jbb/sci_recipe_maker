@@ -2,9 +2,13 @@
 from collections import OrderedDict
 from odoo.tools import html2plaintext
 import json
+from datetime import datetime
 from odoo.http import request
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
+
+ISO8601_FORMAT = "%Y-%m-%dT%H:%M:%S%z"
 
 
 class RecipeRecipe(models.Model):
@@ -37,8 +41,16 @@ class RecipeRecipe(models.Model):
     image_medium = fields.Binary("Recipe image", attachment=True)
 
     @api.model
-    def _get_published_date(self):
-        return
+    def _get_hm_format(self, totalMinutes):
+        if totalMinutes == 60:
+            ptm = "1 hr"
+        elif totalMinutes > 60:
+            totalHours = totalMinutes // 60
+            remainingMinutes = totalMinutes % 60
+            ptm = "%s hrs%s" % (totalHours, remainingMinutes and ' %s mins' % remainingMinutes or '')
+        else:
+            ptm = "%s mins" % totalMinutes
+        return ptm
 
     @api.model
     def get_recipe_groups(self, obj):
@@ -71,6 +83,9 @@ class RecipeRecipe(models.Model):
         post_url = '%s/blog/%s/post/%s' % (base_url, slug(self.blog_id), slug(self))
         author_name = self.sudo().author_id.name
 
+        published_date = self.published_date and self.published_date.strftime(ISO8601_FORMAT) or ""
+        write_date = self.write_date and self.write_date.strftime(ISO8601_FORMAT) or ""
+
         data = {"@context": "https://schema.org",
                 "@graph": [
                     {
@@ -96,9 +111,8 @@ class RecipeRecipe(models.Model):
                         "primaryImageOfPage": {
                             "@id": "%s/#primaryimage" % base_url
                         },
-                        # TODO: Add a method to get the published date using the format below
-                        "datePublished": "2018-04-24T18:39:47+00:00",
-                        "dateModified": "2019-01-11T19:35:56+00:00",
+                        "datePublished": "%s" % published_date,
+                        "dateModified": "%s" % write_date,
                         "author": {
                             # TODO: Check person schema in the old blog site
                             "@id": "%s/#/schema/person/d89e1f0edb9e60a39900bb2afadafa00" % base_url
@@ -130,17 +144,13 @@ class RecipeRecipe(models.Model):
                             "name": "%s" % (self.author or author_name)
                         },
                         "description": "%s" % self.subtitle,
-                        # TODO: Add a method that formats the publishing date-->
-                        "datePublished": "2018-04-24T13:39:47+00:00",
-                        # TODO: Get all images?
+                        "datePublished": "%s" % published_date,
                         "image": [
                             "%s/web/image/blog.post/%s/image_medium" % (base_url, self.id),
                         ],
-                        # TODO: Add a method that adds converts minutes to hour-minute format
                         "prepTime": "PT%sM" % self.prep_time,
                         "cookTime": "PT%sM" % self.cook_time,
                         "totalTime": "PT%sM" % self.total_time,
-                        # TODO: Check if in order
                         "recipeIngredient": [
                             "%s%s%s%s" % (
                                 ing.amount or '', ing.unit and ' %s' % ing.unit or '',

@@ -1,10 +1,36 @@
 <odoo>
+    <template id="recipe_cooking_time" name="Recipe Cooking Time">
+        <div t-if="p.prep_time or p.cook_time or p.total_time"
+             class="recipe-times d-flex justify-content-around align-items-center my-4">
+            <div t-if="p.prep_time" class="prep-time">
+                <img class="img" src="/sci_recipe_maker/static/images/prep-time.svg" width="22" height="auto" alt=""
+                     title=""/>
+                <span class="align-middle">
+                    <t t-esc="p._get_hm_format(p.prep_time)"/>
+                </span>
+            </div>
+            <div t-if="p.cook_time" class="cook-time">
+                <img class="img" src="/sci_recipe_maker/static/images/cook-time.svg" width="22" height="auto" alt=""
+                     title=""/>
+                <span class="align-middle">
+                    <t t-esc="p._get_hm_format(p.cook_time)"/>
+                </span>
+            </div>
+            <div t-if="p.total_time" class="total-time">
+                <img class="img" src="/sci_recipe_maker/static/images/total-time.svg" width="22" height="auto" alt=""
+                     title=""/>
+                <span class="font-weight-bold align-middle">
+                    <t t-esc="p._get_hm_format(p.total_time)"/>
+                </span>
+            </div>
+        </div>
+    </template>
 
-    <template i="recipe_snippet" name="Recipe Snippet">
+    <template id="recipe_snippet" name="Recipe Snippet">
         <div class="row">
-            <t t-if="p.image">
+            <t t-if="p.image_medium">
                 <div class="thumb d-flex align-items-center" style="height:200px;overflow:hidden;"
-                     t-field="p.image" t-options="{'widget': 'image'}"/>
+                     t-field="p.image_medium" t-options="{'widget': 'image'}"/>
             </t>
             <div class="mt-4">
                 <a class="text-decoration-none" t-att-href="p.website_url">
@@ -15,37 +41,37 @@
                     by
                     <span t-esc="p.sudo().author_id.name"/>
                 </i>
-                <p class="mt-3" t-field="p.teaser"/>
+                <t t-call="sci_recipe_maker.recipe_cooking_time"/>
+                <p class="mt-3" t-field="p.subtitle"/>
                 <a class="text-underline" t-att-href="p.website_url">Read More</a>
             </div>
         </div>
     </template>
-    <template i="product_recipe_snippet" name="Product Recipe Snippet">
+
+    <template id="product_recipe_snippet" name="Product Recipe Snippet">
         <t t-foreach="posts" t-as="p">
-            <t t-set="properties" t-value="json.loads(p.cover_properties)"/>
             <div class="col-lg-4 my-3 loading_container s_latest_posts_post">
                 <t t-call="sci_recipe_maker.recipe_snippet"/>
             </div>
         </t>
     </template>
 
-    <template i="sidebar_recipe_snippet" name="Sidebar Recipe Snippet">
+    <template id="sidebar_recipe_snippet" name="Sidebar Recipe Snippet">
         <t t-foreach="posts" t-as="p">
-            <t t-set="properties" t-value="json.loads(p.cover_properties)"/>
             <div class="col-lg-12 my-3 loading_container s_latest_posts_post">
                 <t t-call="sci_recipe_maker.recipe_snippet"/>
             </div>
         </t>
     </template>
 
-    <template i="homepage_recipe_snippet" name="Homepage Recipe Snippet">
+    <template id="homepage_recipe_snippet" name="Homepage Recipe Snippet">
         <t t-foreach="posts" t-as="p">
-            <t t-set="properties" t-value="json.loads(p.cover_properties)"/>
             <div class="col-lg-3 my-3 loading_container s_latest_posts_post">
                 <t t-call="sci_recipe_maker.recipe_snippet"/>
             </div>
         </t>
     </template>
+
     <template id="recipe_post_template" name="Recipe Post Template">
         <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id"
             placeholder="Blog Post Title"/>
@@ -62,34 +88,32 @@
                       t-att-alt="blog_post.name"/>
             </div>
             <div class="col-lg-6 my-3">
-                <div class="recipe-times d-flex justify-content-center align-items-center mb-2">
+                <div t-if="blog_post.prep_time or blog_post.cook_time or blog_post.total_time"
+                     class="recipe-times d-flex justify-content-center align-items-center mb-4">
                     <div class="prep-time text-center">
                         <img class="img" src="/sci_recipe_maker/static/images/prep-time.png" alt="" title=""/>
                         <h6 class="font-weight-bold my-2 text-black">Prep Time</h6>
                         <span class="text-tertiary">
-                            <t t-esc="blog_post.prep_time"/>
-                            mins
+                            <t t-esc="blog_post._get_hm_format(blog_post.prep_time)"/>
                         </span>
                     </div>
                     <div class="cook-time text-center">
                         <img class="img" src="/sci_recipe_maker/static/images/cook-time.png" alt="" title=""/>
                         <h6 class="font-weight-bold my-2 text-black">Cook Time</h6>
                         <span class="text-tertiary">
-                            <t t-esc="blog_post.cook_time"/>
-                            mins
+                            <t t-esc="blog_post._get_hm_format(blog_post.cook_time)"/>
                         </span>
                     </div>
                     <div class="total-time text-center">
                         <img class="img" src="/sci_recipe_maker/static/images/total-time.png" alt="" title=""/>
                         <h6 class="font-weight-bold my-2 text-black">Total Time</h6>
                         <span class="text-tertiary font-weight-bold">
-                            <t t-esc="blog_post.total_time"/>
-                            mins
+                            <t t-esc="blog_post._get_hm_format(blog_post.total_time)"/>
                         </span>
                     </div>
                 </div>
-                <div t-if="blog_post.summary" class="recipe-summary">
-                    <p class="font-weight-bold my-4" t-field="blog_post.summary" placeholder="Subtitle"/>
+                <div t-if="blog_post.subtitle" class="recipe-summary mb-4">
+                    <p class="font-weight-bold" t-field="blog_post.subtitle"/>
                 </div>
                 <div class="recipe-details">
                     <div t-if="blog_post.course_ids" class="recipe-course my-2">
@@ -171,7 +195,7 @@
                 <div class="line mt-5"/>
             </div>
         </div>
-        <div t-if="blog_post.about_author" class="row">
+        <div class="row">
             <div class="col-lg-12 mt-5">
                 <div class="recipe-about d-flex align-items-center">
                     <div t-field="blog_post.sudo().author_id.image" class="o_not_editable"
@@ -180,7 +204,7 @@
                         <h4 class="mb-2">About
                             <t t-esc="blog_post.sudo().author_id.name"/>
                         </h4>
-                        <p class="mb-0" t-field="blog_post.about_author"/>
+                        <p class="mb-0" t-field="blog_post.sudo().author_id.about_author"/>
                     </div>
                 </div>
                 <div class="line mt-5"/>
