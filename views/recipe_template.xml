@@ -27,49 +27,41 @@
     </template>
 
     <template id="recipe_snippet" name="Recipe Snippet">
-        <div class="row">
-            <t t-if="p.image_medium">
-                <div class="thumb d-flex align-items-center" style="height:200px;overflow:hidden;"
-                     t-field="p.image_medium" t-options="{'widget': 'image'}"/>
-            </t>
-            <div class="mt-4">
-                <a class="text-decoration-none" t-att-href="p.website_url">
-                    <h5 class="font-weight-bold text-black" t-field="p.name"/>
-                </a>
-                <i>
-                    <span t-field="p.post_date" t-options='{"format": "MMMM dd, yyyy"}'/>
-                    by
-                    <span t-esc="p.sudo().author_id.name"/>
-                </i>
-                <t t-call="sci_recipe_maker.recipe_cooking_time"/>
-                <p class="mt-3" t-field="p.subtitle"/>
-                <a class="text-underline" t-att-href="p.website_url">Read More</a>
-            </div>
+        <t t-if="p.image_medium">
+            <div class="thumb d-flex align-items-center" style="height:200px;overflow:hidden;"
+                 t-field="p.image_medium" t-options="{'widget': 'image'}"/>
+        </t>
+        <div class="mt-4">
+            <a class="text-decoration-none" t-att-href="p.website_url">
+                <h5 class="font-weight-bold text-black" t-field="p.name"/>
+            </a>
+            <i>
+                <span t-field="p.post_date" t-options='{"format": "MMMM dd, yyyy"}'/>
+                by
+                <span t-esc="p.sudo().author_id.name"/>
+            </i>
+            <t t-call="sci_recipe_maker.recipe_cooking_time"/>
+            <p class="mt-3" t-field="p.subtitle"/>
+            <a class="text-underline" t-att-href="p.website_url">Read More</a>
         </div>
     </template>
 
     <template id="product_recipe_snippet" name="Product Recipe Snippet">
-        <t t-foreach="posts" t-as="p">
-            <div class="col-lg-4 my-3 loading_container s_latest_posts_post">
-                <t t-call="sci_recipe_maker.recipe_snippet"/>
-            </div>
-        </t>
+        <div t-foreach="posts" t-as="p" class="col-lg-4 my-3 loading_container s_latest_posts_post">
+            <t t-call="sci_recipe_maker.recipe_snippet"/>
+        </div>
     </template>
 
     <template id="sidebar_recipe_snippet" name="Sidebar Recipe Snippet">
-        <t t-foreach="posts" t-as="p">
-            <div class="col-lg-12 my-3 loading_container s_latest_posts_post">
-                <t t-call="sci_recipe_maker.recipe_snippet"/>
-            </div>
-        </t>
+        <div t-foreach="posts" t-as="p" class="col-lg-12 my-3 loading_container s_latest_posts_post">
+            <t t-call="sci_recipe_maker.recipe_snippet"/>
+        </div>
     </template>
 
     <template id="homepage_recipe_snippet" name="Homepage Recipe Snippet">
-        <t t-foreach="posts" t-as="p">
-            <div class="col-lg-3 my-3 loading_container s_latest_posts_post">
-                <t t-call="sci_recipe_maker.recipe_snippet"/>
-            </div>
-        </t>
+        <div t-foreach="posts" t-as="p" class="col-lg-3 my-3 loading_container s_latest_posts_post">
+            <t t-call="sci_recipe_maker.recipe_snippet"/>
+        </div>
     </template>
 
     <template id="recipe_post_template" name="Recipe Post Template">
@@ -91,22 +83,25 @@
                 <div t-if="blog_post.prep_time or blog_post.cook_time or blog_post.total_time"
                      class="recipe-times d-flex justify-content-center align-items-center mb-4">
                     <div class="prep-time text-center">
-                        <img class="img" src="/sci_recipe_maker/static/images/prep-time.png" alt="" title=""/>
-                        <h6 class="font-weight-bold my-2 text-black">Prep Time</h6>
+                        <img class="img" src="/sci_recipe_maker/static/images/prep-time.svg" height="36" width="auto"
+                             alt="" title=""/>
+                        <h6 class="font-weight-bold mt-3 mb-2 text-black">Prep Time</h6>
                         <span class="text-tertiary">
                             <t t-esc="blog_post._get_hm_format(blog_post.prep_time)"/>
                         </span>
                     </div>
                     <div class="cook-time text-center">
-                        <img class="img" src="/sci_recipe_maker/static/images/cook-time.png" alt="" title=""/>
-                        <h6 class="font-weight-bold my-2 text-black">Cook Time</h6>
+                        <img class="img" src="/sci_recipe_maker/static/images/cook-time.svg" height="36" width="auto"
+                             alt="" title=""/>
+                        <h6 class="font-weight-bold mt-3 mb-2 text-black">Cook Time</h6>
                         <span class="text-tertiary">
                             <t t-esc="blog_post._get_hm_format(blog_post.cook_time)"/>
                         </span>
                     </div>
                     <div class="total-time text-center">
-                        <img class="img" src="/sci_recipe_maker/static/images/total-time.png" alt="" title=""/>
-                        <h6 class="font-weight-bold my-2 text-black">Total Time</h6>
+                        <img class="img" src="/sci_recipe_maker/static/images/total-time.svg" height="36" width="auto"
+                             alt="" title=""/>
+                        <h6 class="font-weight-bold mt-3 mb-2 text-black">Total Time</h6>
                         <span class="text-tertiary font-weight-bold">
                             <t t-esc="blog_post._get_hm_format(blog_post.total_time)"/>
                         </span>
