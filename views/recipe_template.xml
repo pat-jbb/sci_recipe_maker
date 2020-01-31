@@ -65,7 +65,7 @@
     </template>
 
     <template id="recipe_post_template" name="Recipe Post Template">
-        <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id"
+        <h1 class="mb-3" t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id"
             placeholder="Blog Post Title"/>
         <i>
             <span t-field="blog_post.post_date" t-options='{"format": "MMMM dd, yyyy"}'/>
@@ -73,17 +73,17 @@
             <span t-esc="blog_post.sudo().author_id.name"/>
             <a class="ml-3" href="#comments">Leave a Comment</a>
         </i>
-        <div class="row align-items-center">
-            <div class="col-lg-6 mt-3">
+        <div class="row align-items-center mt-3">
+            <div class="col-lg-6 mb-3">
                 <span t-field="blog_post.image_medium"
                       t-options="{'widget': 'image', 'alt': blog_post.image_caption or '%s Image' % blog_post.name}"
                       t-att-alt="blog_post.name"/>
             </div>
-            <div class="col-lg-6 my-3">
+            <div class="col-lg-6 mb-3">
                 <div t-if="blog_post.prep_time or blog_post.cook_time or blog_post.total_time"
                      class="recipe-times d-flex justify-content-center align-items-center mb-4">
                     <div class="prep-time text-center">
-                        <img class="img" src="/sci_recipe_maker/static/images/prep-time.svg" height="36" width="auto"
+                        <img class="img" src="/sci_recipe_maker/static/images/prep-time.svg" height="30" width="auto"
                              alt="" title=""/>
                         <h6 class="font-weight-bold mt-3 mb-2 text-black">Prep Time</h6>
                         <span class="text-tertiary">
@@ -91,7 +91,7 @@
                         </span>
                     </div>
                     <div class="cook-time text-center">
-                        <img class="img" src="/sci_recipe_maker/static/images/cook-time.svg" height="36" width="auto"
+                        <img class="img" src="/sci_recipe_maker/static/images/cook-time.svg" height="30" width="auto"
                              alt="" title=""/>
                         <h6 class="font-weight-bold mt-3 mb-2 text-black">Cook Time</h6>
                         <span class="text-tertiary">
@@ -99,7 +99,7 @@
                         </span>
                     </div>
                     <div class="total-time text-center">
-                        <img class="img" src="/sci_recipe_maker/static/images/total-time.svg" height="36" width="auto"
+                        <img class="img" src="/sci_recipe_maker/static/images/total-time.svg" height="30" width="auto"
                              alt="" title=""/>
                         <h6 class="font-weight-bold mt-3 mb-2 text-black">Total Time</h6>
                         <span class="text-tertiary font-weight-bold">
@@ -190,7 +190,7 @@
                 <div class="line mt-5"/>
             </div>
         </div>
-        <div class="row" t-if="blog_post.sudo().author_id.image or blog_post.sudo().author_id.about_author">
+        <div class="row" t-if="blog_post.sudo().author_id.about_author">
             <div class="col-lg-12 mt-5">
                 <div class="recipe-about d-flex align-items-center">
                     <t t-if="blog_post.sudo().author_id.image">
