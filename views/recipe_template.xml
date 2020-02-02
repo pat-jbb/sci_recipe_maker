@@ -65,7 +65,7 @@
     </template>
 
     <template id="recipe_post_template" name="Recipe Post Template">
-        <h1 class="mb-3" t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id"
+        <h1 class="mb-3 text-black" t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id"
             placeholder="Blog Post Title"/>
         <i>
             <span t-field="blog_post.post_date" t-options='{"format": "MMMM dd, yyyy"}'/>
