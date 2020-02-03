@@ -145,7 +145,7 @@
                                 <span class="ingredient-amount" t-field="ingredient.amount"/>
                                 <span class="ingredient-unit" t-field="ingredient.unit"/>
                                 <a t-if="ingredient.sudo().product_id and ingredient.sudo().product_id.website_published"
-                                   t-att-href="'/shop/product/%s' % slug(ingredient.sudo().product_id)">
+                                   t-att-href="'/shop/product/%s' % slug(ingredient.sudo().product_id.product_tmpl_id)">
                                     <span class="ingredient-name" t-field="ingredient.name"/>
                                     <t t-if="ingredient.notes">,</t>
                                 </a>
