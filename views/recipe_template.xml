@@ -246,83 +246,75 @@
 
     <template id="recipe_tag_template" name="Recipe Tag Template">
         <t t-call="website_blog.index">
-            <!--            <t t-set="head">-->
-            <!--                <link t-att-href="'/blog/%s/feed' % (blog.id)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>-->
-            <!--                <meta t-if="len(active_tag_ids) &gt; 0" name="robots" t-attf-content="#{len(active_tag_ids) &gt; 1 and 'noindex,'} nofollow"/>-->
-            <!--            </t>-->
+            <t t-set="head">
+                <link t-att-href="'/blog/%s/feed' % (blog.id)" type="application/atom+xml" rel="alternate"
+                      title="Atom Feed"/>
+            </t>
             <div class="oe_structure" id="oe_structure_website_blog_post_short_1"/>
+            <div class="container">
+                <!--<t t-call="website.pager">-->
+                <!--    <t t-set="classname">float-right</t>-->
+                <!--</t>-->
+            </div>
             <div class="oe_structure">
-                <section class="mb0">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12 mb32 mt16 text-center">
-                                <h1 t-field="blog.name"/>
+                <section class="mb0 s_cover parallax w-100 blog-category-header" data-scroll-background-ratio="0.6"
+                         style="background-color: rgba(0, 0, 0, 0.6); background-image: none;">
+                    <t t-set="bg_image" t-value="'/web/image/904459/dry-ing-min.jpg'"/>
+
+                    <span class="s_parallax_bg oe_img_bg oe_custom_bg"
+                          t-attf-style="background-image: url(&quot;{{bg_image}}&quot;); background-position: 50% 20%;"/>
+                    <div class="container my-3">
+                        <div class="row justify-content-center pt-4 pb-4">
+                            <div class="col-12 text-center">
+                                <h1 class="text-white" t-field="blog.name"/>
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
-            <div class="container">
+            <div id="qf-blog" class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-8 offset-lg-2" t-ignore="True" id="main_column">
-
-                        <div t-if="not blog_posts" class="container mb64">
-                            <p class="css_editable_hidden">
-                                <h1>No blog post yet.</h1>
-                            </p>
-                            <p groups="website.group_website_designer">
-                                Click on "New Page" in the top-right corner to write your first blog post.
-                            </p>
-                        </div>
-
-                        <div t-foreach="blog_posts" t-as="blog_post" class="mb32" name="blog_post">
-                            <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }">
-                                <h2 t-field="blog_post.name" class="mb4 o_blog_post_title">Untitled Post</h2>
-                            </a>
-                            <div class="text-muted">
-                                <div t-field="blog_post.teaser" class="mb12 mt12 o_blog_post_teaser"/>
-                                <div name="blog_post_data" class="mb0">
-                                    <span t-field="blog_post.author_id" style="display: inline-block;"
-                                          t-options="{'widget': 'contact','fields': ['name']}"/>
-                                    &amp;mdash;
-                                    <span t-field="blog_post.post_date"
-                                          t-options="{'format': 'MMMM yyyy'}"/>
-                                    <span t-if="len(blog_post.message_ids) &gt; 0">
-                                        &amp;mdash;
-                                        <t t-esc="len(blog_post.message_ids)"/>
-                                        <t t-if="len(blog_post.message_ids) &lt;= 1">comment</t>
-                                        <t t-if="len(blog_post.message_ids) &gt; 1">comments</t>
-                                    </span>
-                                    <span t-if="blog_post.visits &gt; 0">
-                                        &amp;mdash;
-                                        <t t-esc="blog_post.visits"/>
-                                        <t t-if="blog_post.visits &lt;= 1">view</t>
-                                        <t t-if="blog_post.visits &gt; 1">views</t>
-                                    </span>
-                                    <span t-if="not blog_post.website_published" class="badge badge-danger">
-                                        unpublished
-                                    </span>
-                                    <span class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
-
-
-                                    <div class="o_sharing_links">
-                                        <a class="fa fa-twitter-square o_twitter" aria-label="Twitter" title="Twitter"/>
-                                        <a class="fa fa-facebook-square o_facebook" aria-label="Facebook"
-                                           title="Facebook"/>
-                                        <a class="fa fa-linkedin-square o_linkedin" aria-label="LinkedIn"
-                                           title="LinkedIn"/>
-                                        <a class="fa fa-google-plus-square o_google" aria-label="Google Plus"
-                                           title="Google Plus"/>
-                                    </div>
-                                    <hr/>
+                    <div id="blog_sidebar" class="col-lg-3 mt-2">
+                        <div>
+                            <t t-call="theme_qualifirst.recipe_type"/>
+                            <t t-call="theme_qualifirst.recipe_newsletter"/>
+                            <t t-call="theme_qualifirst.recipe_tips"/>
+                            <div class="dotted-line w-100 mb48"/>
+                            <div class="col-12 mb48">
+                                <div class="row">
+                                    <h4 class="text-tertiary">Latest post</h4>
                                 </div>
+                                <div class="row s_col_no_bgcolor js_get_posts"
+                                     data-template="website_blog.qualifirst_blog_snippet"/>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-lg-9 mt32" t-ignore="True" id="main_column">
+                        <div class="row pb-4 text-center no-gutters">
+                            <div t-if="not blog_posts" class="container mb64">
+                                <p class="css_editable_hidden">
+                                    <h1>No blog post yet.</h1>
+                                </p>
+                                <p groups="website.group_website_designer">
+                                    Click on "New Page" in the top-right corner to write your first blog post.
+                                </p>
+                            </div>
+                            <t t-foreach="blog_posts.sorted(key=lambda b: b.x_studio_original_published_date, reverse=True)"
+                               t-as="post" name="blog_post">
+                                <div class="col-lg-6 col-xl-4 mb-3 px-4 blog-card">
+                                    <t t-call="theme_qualifirst.blog_item">
+                                        <t t-set="class_width_md" t-value="'w-md-50'"/>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+
                     </div>
                 </div>
             </div>
 
             <div class="oe_structure" id="oe_structure_website_blog_post_short_2"/>
+            <t t-call="theme_qualifirst.gourmet_supplier_section"/>
         </t>
     </template>
 
