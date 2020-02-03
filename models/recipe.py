@@ -18,15 +18,12 @@ class RecipeRecipe(models.Model):
     is_recipe = fields.Boolean("Is a Recipe")
     is_featured_gourmet = fields.Boolean("Featured Gourmet")
     # recipe_name = fields.Char("Recipe Name")
-    # TODO: Remove summary and transfer to tge default subtitle field
     summary = fields.Text("Summary")
     author = fields.Char("Author Name")
     about_author = fields.Text("About the Author")
     servings = fields.Char("Servings")
     servings_type = fields.Char("Servings Type", default="People")
     calories = fields.Integer("Calories")
-    # TODO: Create a method that gets the ISO 8601 time duration format
-    # TODO: Create a method that converts mins to hour-minute
     prep_time = fields.Integer("Prep Time")
     cook_time = fields.Integer("Cook Time")
     total_time = fields.Integer("Total Time")
@@ -78,111 +75,106 @@ class RecipeRecipe(models.Model):
 
     @api.multi
     def get_structured_data(self):
+        # TODO: Add rating, nutrition, video schema
         self.ensure_one()
-        base_url = self.website_id and self.website_id.domain.rstrip('/')
+        current_website = self.env['website'].get_current_website()
+        base_url = current_website and current_website.domain.rstrip('/')
         post_url = '%s/blog/%s/post/%s' % (base_url, slug(self.blog_id), slug(self))
         author_name = self.sudo().author_id.name
 
         published_date = self.published_date and self.published_date.strftime(ISO8601_FORMAT) or ""
         write_date = self.write_date and self.write_date.strftime(ISO8601_FORMAT) or ""
 
-        data = {"@context": "https://schema.org",
-                "@graph": [
-                    {
-                        "@type": "WebSite",
-                        "@id": "%s/#wrap" % base_url,
-                        "url": "%s" % base_url,
-                        "name": "Qualifirst Blog",
-                        "potentialAction": {
-                            "@type": "SearchAction",
-                            "target": "%s/search?q={search_term_string}" % base_url,
-                            "query-input": "required q=search_term_string"
-                        }
-                    },
-                    {
-                        "@type": "WebPage",
-                        "@id": "%s/#wrap" % base_url,
-                        "url": "%s" % base_url,
-                        "inLanguage": "en-US",
-                        "name": "%s" % self.website_meta_title,
-                        "isPartOf": {
-                            "@id": "%s/#website" % base_url
-                        },
-                        "primaryImageOfPage": {
-                            "@id": "%s/#primaryimage" % base_url
-                        },
-                        "datePublished": "%s" % published_date,
-                        "dateModified": "%s" % write_date,
-                        "author": {
-                            # TODO: Check person schema in the old blog site
-                            "@id": "%s/#/schema/person/d89e1f0edb9e60a39900bb2afadafa00" % base_url
-                        },
-                        "description": "%s" % self.subtitle
-                    },
-                    {
-                        "@type": [
-                            "Person"
-                        ],
-                        # TODO: Check ID
-                        "@id": "%s/#/schema/person/d89e1f0edb9e60a39900bb2afadafa00" % base_url,
-                        "name": "%s" % author_name,
-                        "image": {
-                            "@type": "ImageObject",
-                            "@id": "%s/#authorlogo" % base_url,
-                            "url": "%s" % (self.sudo().author_id.gravatar_image_url or ''),
-                            "caption": "%s" % author_name
-                        },
-                        "description": "%s" % self.sudo().author_id.about_author,
-                        "sameAs": self.sudo().author_id.get_partner_social()
-                    },
-                    {
-                        "@context": "http://schema.org/",
-                        "@type": "Recipe",
-                        "name": "%s" % self.name,
-                        "author": {
-                            "@type": "Person",
-                            "name": "%s" % (self.author or author_name)
-                        },
-                        "description": "%s" % self.subtitle,
-                        "datePublished": "%s" % published_date,
-                        "image": [
-                            "%s/web/image/blog.post/%s/image_medium" % (base_url, self.id),
-                        ],
-                        "prepTime": "PT%sM" % self.prep_time,
-                        "cookTime": "PT%sM" % self.cook_time,
-                        "totalTime": "PT%sM" % self.total_time,
-                        "recipeIngredient": [
-                            "%s%s%s%s" % (
-                                ing.amount or '', ing.unit and ' %s' % ing.unit or '',
-                                ing.name and ' %s' % ing.name or '',
-                                ing.notes and ', %s' % ing.notes or '') for ing in self.ingredient_line_ids
-                        ],
-                        "recipeInstructions": [{
-                            "@type": "HowToStep",
-                            "text": "%s" % ins.name
-                        } for ins in self.instruction_line_ids
-                        ],
-                        "recipeCategory": [course.name for course in self.course_ids],
-                        "recipeCuisine": [cuisine.name for cuisine in self.cuisine_ids],
-                        "@id": "%s/#recipe" % post_url,
-                        "isPartOf": {
-                            "@id": "%s/#wrap" % post_url
-                        },
-                        "mainEntityOfPage": "%s/#wrap" % post_url
-                    }]
-                }
+        schema_data = OrderedDict()
+        schema_data["@context"] = "https://schema.org"
+        schema_data["@graph"] = []
+        schema_data["@graph"].append({
+            "@type": "WebSite",
+            "@id": "%s/#wrap" % base_url,
+            "url": "%s" % base_url,
+            "name": "Qualifirst Blog",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "%s/search?q={search_term_string}" % base_url,
+                "query-input": "required q=search_term_string"
+            }
+        })
+        schema_data["@graph"].append({
+            "@type": "WebPage",
+            "@id": "%s/#wrap" % base_url,
+            "url": "%s" % base_url,
+            # TODO: dynamic inLanguage ?
+            "inLanguage": "en-US",
+            "name": "%s" % self.website_meta_title,
+            "isPartOf": {
+                "@id": "%s/#website" % base_url
+            },
+            "primaryImageOfPage": {
+                "@id": "%s/#primaryimage" % base_url
+            },
+            "datePublished": "%s" % published_date,
+            "dateModified": "%s" % write_date,
+            "description": "%s" % self.website_meta_description
+        })
 
-        if self.image_medium:
-            data['@graph'].append({
-                "@type": "ImageObject",
-                "@id": "%s/#primaryimage" % post_url,
-                "url": "%s/web/image/blog.post/%s/image_medium" % (base_url, self.id),
-                # "width": 3170,
-                # "height": 1642,
-                "caption": "%s" % self.image_caption or '%s Image' % self.name
+        if self.sudo().author_id.gravatar_image_url and self.sudo().author_id.about_author:
+            schema_data["@graph"].append({
+                "@type": "Person",
+                "name": "%s" % author_name,
+                "image": {
+                    "@type": "ImageObject",
+                    "@id": "%s/#authorlogo" % base_url,
+                    "url": "%s" % self.sudo().author_id.gravatar_image_url or '',
+                    "caption": "%s" % author_name
+                },
+                "description": "%s" % self.sudo().author_id.about_author,
+                "sameAs": self.sudo().author_id.get_partner_social()
             })
 
-        return json.dumps(data)
+        if self.is_recipe and self.ingredient_line_ids:
+            schema_data["@graph"].append({
+                "@context": "http://schema.org/",
+                "@type": "Recipe",
+                "name": "%s" % self.name,
+                "author": {
+                    "@type": "Person",
+                    "name": "%s" % (self.author or author_name)
+                },
+                "description": "%s" % self.subtitle,
+                "datePublished": "%s" % published_date,
+                # TODO: Implement multiple images here
+                "image": ["%s/web/image/blog.post/%s/image_medium" % (base_url, self.id)],
+                "prepTime": "PT%sM" % self.prep_time,
+                "cookTime": "PT%sM" % self.cook_time,
+                "totalTime": "PT%sM" % self.total_time,
+                "recipeIngredient": [
+                    "%s%s%s%s" % (
+                        ing.amount or '', ing.unit and ' %s' % ing.unit or '',
+                        ing.name and ' %s' % ing.name or '',
+                        ing.notes and ', %s' % ing.notes or '') for ing in self.ingredient_line_ids
+                ],
+                "recipeInstructions": [{
+                    "@type": "HowToStep",
+                    "text": "%s" % ins.name
+                } for ins in self.instruction_line_ids
+                ],
+                "recipeCategory": [course.name for course in self.course_ids],
+                "recipeCuisine": [cuisine.name for cuisine in self.cuisine_ids],
+                "@id": "%s/#recipe" % post_url,
+                "isPartOf": {
+                    "@id": "%s/#wrap" % post_url
+                },
+                "mainEntityOfPage": "%s/#wrap" % post_url})
+
+            if self.image_medium:
+                schema_data["@graph"].append({
+                    "@type": "ImageObject",
+                    "@id": "%s/#primaryimage" % post_url,
+                    "url": "%s/web/image/blog.post/%s/image_medium" % (base_url, self.id),
+                    "caption": "%s" % self.image_caption or '%s Image' % self.name
+                })
+
+        return json.dumps(schema_data)
 
 
 class RecipeTag(models.Model):

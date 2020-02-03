@@ -29,7 +29,7 @@
     <template id="recipe_snippet" name="Recipe Snippet">
         <t t-if="p.image_medium">
             <div class="thumb d-flex align-items-center" style="height:200px;overflow:hidden;"
-                 t-field="p.image_medium" t-options="{'widget': 'image', 'alt-field': 'name'}"/>
+                 t-field="p.image_medium" t-options="{'widget': 'image', 'alt-field': 'name', 'class': 'w-100'}"/>
         </t>
         <div class="mt-4">
             <a class="text-decoration-none" t-att-href="p.website_url">
@@ -146,12 +146,10 @@
                                 <span class="ingredient-unit" t-field="ingredient.unit"/>
                                 <a t-if="ingredient.sudo().product_id and ingredient.sudo().product_id.website_published"
                                    t-att-href="'/shop/product/%s' % slug(ingredient.sudo().product_id.product_tmpl_id)">
-                                    <span class="ingredient-name" t-field="ingredient.name"/>
-                                    <t t-if="ingredient.notes">,</t>
+                                    <span class="ingredient-name" t-field="ingredient.name"/><t t-if="ingredient.notes">,</t>
                                 </a>
                                 <t t-else="">
-                                    <span class="ingredient-name" t-field="ingredient.name"/>
-                                    <t t-if="ingredient.notes">,</t>
+                                    <span class="ingredient-name" t-field="ingredient.name"/><t t-if="ingredient.notes">,</t>
                                 </t>
                                 <t t-if="ingredient.notes">
                                     <span class="ingredient-note" t-field="ingredient.notes"/>
@@ -161,7 +159,6 @@
                         </t>
                     </ul>
                 </t>
-                <div class="line mt-5"/>
             </div>
         </div>
         <div t-if="blog_post.instruction_line_ids" class="row">
