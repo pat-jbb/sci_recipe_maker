@@ -29,7 +29,7 @@
     <template id="recipe_snippet" name="Recipe Snippet">
         <t t-if="p.image_medium">
             <div class="thumb d-flex align-items-center" style="height:200px;overflow:hidden;"
-                 t-field="p.image_medium" t-options="{'widget': 'image'}"/>
+                 t-field="p.image_medium" t-options="{'widget': 'image', 'alt-field': 'name'}"/>
         </t>
         <div class="mt-4">
             <a class="text-decoration-none" t-att-href="p.website_url">
@@ -59,7 +59,7 @@
     </template>
 
     <template id="homepage_recipe_snippet" name="Homepage Recipe Snippet">
-        <div t-foreach="posts" t-as="p" class="col-lg-3 my-3 loading_container s_latest_posts_post">
+        <div t-foreach="posts" t-as="p" class="col-lg-3 col-sm-6 my-3 loading_container s_latest_posts_post">
             <t t-call="sci_recipe_maker.recipe_snippet"/>
         </div>
     </template>
@@ -195,7 +195,7 @@
                 <div class="recipe-about d-flex align-items-center">
                     <t t-if="blog_post.sudo().author_id.image">
                         <div t-field="blog_post.sudo().author_id.image" class="o_not_editable"
-                             t-options="{&quot;widget&quot;: &quot;image&quot;, &quot;class&quot;: &quot;d-block rounded-circle px-3&quot;, &quot;resize&quot;: &quot;150x150&quot;}"/>
+                             t-options="{'widget': 'image', 'class': 'd-block rounded-circle px-3', 'resize': '150x150', 'alt': 'Author Image'}"/>
                     </t>
                     <div class="recipe-about-author">
                         <h4 class="mb-2">About
@@ -283,10 +283,10 @@
                                 <div t-field="blog_post.teaser" class="mb12 mt12 o_blog_post_teaser"/>
                                 <div name="blog_post_data" class="mb0">
                                     <span t-field="blog_post.author_id" style="display: inline-block;"
-                                          t-options="{                                 &quot;widget&quot;: &quot;contact&quot;,                                 &quot;fields&quot;: [&quot;name&quot;]                             }"/>
+                                          t-options="{'widget': 'contact','fields': ['name']}"/>
                                     &amp;mdash;
                                     <span t-field="blog_post.post_date"
-                                          t-options="{&quot;format&quot;: &quot;MMMM yyyy&quot;}"/>
+                                          t-options="{'format': 'MMMM yyyy'}"/>
                                     <span t-if="len(blog_post.message_ids) &gt; 0">
                                         &amp;mdash;
                                         <t t-esc="len(blog_post.message_ids)"/>
