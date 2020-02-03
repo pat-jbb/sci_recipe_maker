@@ -159,6 +159,7 @@
                         </t>
                     </ul>
                 </t>
+                <div class="line mt-5"/>
             </div>
         </div>
         <div t-if="blog_post.instruction_line_ids" class="row">
