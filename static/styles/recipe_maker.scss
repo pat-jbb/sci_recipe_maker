@@ -1,6 +1,6 @@
 .recipe {
   &-times {
-    & > div:not(:last-child){
+    & > div:not(:last-child) {
       border-right: 1px dashed #cdcdcd;
     }
 
@@ -17,8 +17,9 @@
     }
   }
 
-  &-instruction {
-
+  &-about-author {
+    width: 150px;
+    height: 150px;
   }
 
   .line {
@@ -32,5 +33,12 @@
     .card-columns {
       column-count: 2;
     }
+  }
+}
+
+.recipe_container {
+  .thumb {
+    height: 200px;
+    overflow: hidden;
   }
 }

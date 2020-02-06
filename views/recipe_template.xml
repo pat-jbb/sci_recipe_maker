@@ -28,7 +28,7 @@
 
     <template id="recipe_snippet" name="Recipe Snippet">
         <t t-if="p.image_medium">
-            <div class="thumb d-flex align-items-center" style="height:200px;overflow:hidden;"
+            <div class="thumb d-flex justify-content-center"
                  t-field="p.image_medium" t-options="{'widget': 'image', 'alt-field': 'name', 'class': 'w-100'}"/>
         </t>
         <div class="mt-4">
@@ -47,19 +47,20 @@
     </template>
 
     <template id="product_recipe_snippet" name="Product Recipe Snippet">
-        <div t-foreach="posts" t-as="p" class="col-lg-4 my-3 loading_container s_latest_posts_post">
+        <div t-foreach="posts" t-as="p" class="col-lg-4 my-3 loading_container s_latest_posts_post recipe_container">
             <t t-call="sci_recipe_maker.recipe_snippet"/>
         </div>
     </template>
 
     <template id="sidebar_recipe_snippet" name="Sidebar Recipe Snippet">
-        <div t-foreach="posts" t-as="p" class="col-lg-12 my-3 loading_container s_latest_posts_post">
+        <div t-foreach="posts" t-as="p" class="col-lg-12 my-3 loading_container s_latest_posts_post recipe_container">
             <t t-call="sci_recipe_maker.recipe_snippet"/>
         </div>
     </template>
 
     <template id="homepage_recipe_snippet" name="Homepage Recipe Snippet">
-        <div t-foreach="posts" t-as="p" class="col-lg-3 col-sm-6 my-3 loading_container s_latest_posts_post">
+        <div t-foreach="posts" t-as="p"
+             class="col-lg-3 col-sm-6 my-3 loading_container s_latest_posts_post recipe_container">
             <t t-call="sci_recipe_maker.recipe_snippet"/>
         </div>
     </template>
@@ -76,7 +77,7 @@
         <div class="row align-items-center mt-3">
             <div class="col-lg-6 mb-3">
                 <span t-field="blog_post.image_medium"
-                      t-options="{'widget': 'image', 'alt': blog_post.image_caption or '%s Image' % blog_post.name}"
+                      t-options="{'widget': 'image', 'alt': blog_post.image_caption or '%s Image' % blog_post.name, 'class': 'w-100'}"
                       t-att-alt="blog_post.name"/>
             </div>
             <div class="col-lg-6 mb-3">
@@ -191,9 +192,9 @@
         <div class="row" t-if="blog_post.sudo().author_id.about_author">
             <div class="col-lg-12 mt-5">
                 <div class="recipe-about d-flex align-items-center">
-                    <t t-if="blog_post.sudo().author_id.image">
-                        <div t-field="blog_post.sudo().author_id.image" class="o_not_editable"
-                             t-options="{'widget': 'image', 'class': 'd-block rounded-circle px-3', 'resize': '150x150', 'alt': 'Author Image'}"/>
+                    <t t-if="blog_post.sudo().author_id.gravatar_image_url">
+                        <img t-att-src="blog_post.sudo().author_id.gravatar_image_url"
+                             class="d-block rounded-circle px-3 recipe-about-img" alt="Author Image"/>
                     </t>
                     <div class="recipe-about-author">
                         <h4 class="mb-2">About
