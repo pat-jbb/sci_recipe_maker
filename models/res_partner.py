@@ -4,7 +4,7 @@ from odoo import api, fields, models, _
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    about_author = fields.Text("About Author", help="About the Author description in the blog post")
+    about_author = fields.Html("About Author", help="About the Author description in the blog post")
     gravatar_image_url = fields.Char("Gravatar Image URL", help="Blog post author Gravatar image url")
     social_twitter = fields.Char('Twitter Account')
     social_facebook = fields.Char('Facebook Account')
