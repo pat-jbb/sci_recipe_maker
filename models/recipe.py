@@ -15,10 +15,8 @@ class RecipeRecipe(models.Model):
     _inherit = "blog.post"
     _description = "Recipe Maker"
 
-    recipe_name = fields.Char("Recipe Name")
     is_recipe = fields.Boolean("Is a Recipe")
     is_featured_gourmet = fields.Boolean("Featured Gourmet")
-    # recipe_name = fields.Char("Recipe Name")
     summary = fields.Text("Summary")
     author = fields.Char("Author Name")
     about_author = fields.Text("About the Author")
