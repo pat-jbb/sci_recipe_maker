@@ -66,45 +66,54 @@
     </template>
 
     <template id="recipe_post_template" name="Recipe Post Template">
-        <h1 class="mb-3 text-black" t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id"
+        <div t-attf-class="row {{'css_non_editable_mode_hidden' if 'Start writing here...' in blog_post.content or not blog_post.content else ''}}">
+            <div class="col-lg-12">
+                <div t-field="blog_post.content" class="oe_no_empty"/>
+                <div class="line my-5"/>
+            </div>
+        </div>
+        <h1 t-field="blog_post.name" id="blog_post_name" class="text-black" t-att-data-blog-id="blog_post.id"
             placeholder="Blog Post Title"/>
         <i>
-            <span t-field="blog_post.post_date" t-options='{"format": "MMMM dd, yyyy"}'/>
+            <span t-field="blog_post.post_date" t-options="{&quot;format&quot;: &quot;MMMM dd, yyyy&quot;}"/>
             by
             <span t-esc="blog_post.sudo().author_id.name"/>
             <a class="ml-3" href="#comments">Leave a Comment</a>
         </i>
-        <div class="row align-items-center mt-3">
-            <div class="col-lg-6 mb-3">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mt-3">
                 <span t-field="blog_post.image_medium"
-                      t-options="{'widget': 'image', 'alt': blog_post.image_caption or '%s Image' % blog_post.name, 'class': 'w-100'}"
+                      t-options="{'widget': 'image', 'class': 'lazy lazyload-disable', 'alt': blog_post.image_caption or '%s Image' % blog_post.name}"
                       t-att-alt="blog_post.name"/>
             </div>
-            <div class="col-lg-6 mb-3">
-                <div t-if="blog_post.prep_time or blog_post.cook_time or blog_post.total_time"
+            <div class="col-lg-6 my-3">
+                <t t-set="prep_time" t-value="int(blog_post.prep_time)"/>
+                <t t-set="cook_time" t-value="int(blog_post.cook_time)"/>
+                <t t-set="total_time" t-value="prep_time + cook_time"/>
+                <div t-if="prep_time or cook_time or total_time"
                      class="recipe-times d-flex justify-content-center align-items-center mb-4">
                     <div class="prep-time text-center">
-                        <img class="img" src="/sci_recipe_maker/static/images/prep-time.svg" height="30" width="auto"
-                             alt="" title=""/>
+                        <img class="img lazy lazyload-disable" src="/sci_recipe_maker/static/images/prep-time.svg"
+                             height="36" width="auto" alt="" title=""/>
                         <h6 class="font-weight-bold mt-3 mb-2 text-black">Prep Time</h6>
                         <span class="text-tertiary">
-                            <t t-esc="blog_post._get_hm_format(blog_post.prep_time)"/>
+                            <t t-esc="blog_post._get_hm_format(prep_time)"/>
                         </span>
                     </div>
                     <div class="cook-time text-center">
-                        <img class="img" src="/sci_recipe_maker/static/images/cook-time.svg" height="30" width="auto"
-                             alt="" title=""/>
+                        <img class="img lazy lazyload-disable" src="/sci_recipe_maker/static/images/cook-time.svg"
+                             height="36" width="auto" alt="" title=""/>
                         <h6 class="font-weight-bold mt-3 mb-2 text-black">Cook Time</h6>
                         <span class="text-tertiary">
-                            <t t-esc="blog_post._get_hm_format(blog_post.cook_time)"/>
+                            <t t-esc="blog_post._get_hm_format(cook_time)"/>
                         </span>
                     </div>
                     <div class="total-time text-center">
-                        <img class="img" src="/sci_recipe_maker/static/images/total-time.svg" height="30" width="auto"
-                             alt="" title=""/>
+                        <img class="img lazy lazyload-disable" src="/sci_recipe_maker/static/images/total-time.svg"
+                             height="36" width="auto" alt="" title=""/>
                         <h6 class="font-weight-bold mt-3 mb-2 text-black">Total Time</h6>
                         <span class="text-tertiary font-weight-bold">
-                            <t t-esc="blog_post._get_hm_format(blog_post.total_time)"/>
+                            <t t-esc="blog_post._get_hm_format(total_time)"/>
                         </span>
                     </div>
                 </div>
@@ -145,12 +154,13 @@
                                 <!--@formatter:off-->
                                 <span class="ingredient-amount" t-field="ingredient.amount"/>
                                 <span class="ingredient-unit" t-field="ingredient.unit"/>
-                                <a t-if="ingredient.sudo().product_id and ingredient.sudo().product_id.website_published"
-                                   t-att-href="'/shop/product/%s' % slug(ingredient.sudo().product_id.product_tmpl_id)">
-                                    <span class="ingredient-name" t-field="ingredient.name"/><t t-if="ingredient.notes">,</t>
+                                <a t-if="ingredient.sudo().product_id and ingredient.sudo().product_id.website_published" t-att-href="'/shop/product/%s' % slug(ingredient.sudo().product_id.product_tmpl_id)">
+                                    <span class="ingredient-name" t-field="ingredient.name"/>
+                                    <t t-if="ingredient.notes">,</t>
                                 </a>
                                 <t t-else="">
-                                    <span class="ingredient-name" t-field="ingredient.name"/><t t-if="ingredient.notes">,</t>
+                                    <span class="ingredient-name" t-field="ingredient.name"/>
+                                    <t t-if="ingredient.notes">,</t>
                                 </t>
                                 <t t-if="ingredient.notes">
                                     <span class="ingredient-note" t-field="ingredient.notes"/>
@@ -182,25 +192,24 @@
                 <div class="line mt-5"/>
             </div>
         </div>
-        <div t-if="blog_post.has_notes()" class="row">
+        <div t-attf-class="row {{'css_non_editable_mode_hidden' if blog_post.notes == '&lt;p&gt;&lt;br&gt;&lt;/p&gt;' or not blog_post.notes else ''}}">
             <div class="col-lg-12 mt-5">
-                <div t-field="blog_post.notes"/>
+                <div t-field="blog_post.notes" class="oe_no_empty"/>
                 <div class="line mt-5"/>
             </div>
         </div>
-        <t t-set="author_id" t-value="blog_post.sudo().author_id"/>
-        <div class="row" t-if="author_id.about_author != '<p><br></p>'">
+        <div class="row" t-if="blog_post.sudo().author_id.image or blog_post.sudo().author_id.about_author">
             <div class="col-lg-12 mt-5">
                 <div class="recipe-about d-flex align-items-center">
-                    <t t-if="author_id.gravatar_image_url">
-                        <img t-att-src="author_id.gravatar_image_url"
-                             class="d-block rounded-circle px-3 recipe-about-img" alt="Author Image"/>
+                    <t t-if="blog_post.sudo().author_id.gravatar_image_url">
+                        <img t-att-src="blog_post.sudo().author_id.gravatar_image_url"
+                             class="img img-fluid d-block rounded-circle px-3" height="150" width="150"/>
                     </t>
                     <div class="recipe-about-author">
                         <h4 class="mb-2">About
-                            <t t-esc="author_id.name"/>
+                            <t t-esc="blog_post.sudo().author_id.name"/>
                         </h4>
-                        <p class="mb-0" t-field="author_id.about_author"/>
+                        <p class="mb-0" t-field="blog_post.sudo().author_id.about_author"/>
                     </div>
                 </div>
                 <div class="line mt-5"/>
@@ -298,7 +307,7 @@
                                     Click on "New Page" in the top-right corner to write your first blog post.
                                 </p>
                             </div>
-                            <t t-foreach="blog_posts.sorted(key=lambda b: b.x_studio_original_published_date, reverse=True)"
+                            <t t-foreach="blog_posts.sorted(key=lambda b: b.post_date, reverse=True)"
                                t-as="post" name="blog_post">
                                 <div class="col-lg-6 col-xl-4 mb-3 px-4 blog-card">
                                     <t t-call="theme_qualifirst.blog_item">
