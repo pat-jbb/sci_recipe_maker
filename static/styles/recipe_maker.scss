@@ -40,5 +40,9 @@
   .thumb {
     height: 200px;
     overflow: hidden;
+
+    img {
+      align-self: center;
+    }
   }
 }
