@@ -20,7 +20,7 @@ class WebsiteBlog(WebsiteBlog):
         if not tag.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
-        return request.render("sci_recipe_maker.recipe_tag_template", {
+        return request.render("website_blog.blog_post_short", {
             'blog': tag,
             'blog_posts': tag.post_ids,
         })
@@ -36,7 +36,7 @@ class WebsiteBlog(WebsiteBlog):
         if not course.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
-        return request.render("sci_recipe_maker.recipe_tag_template", {
+        return request.render("website_blog.blog_post_short", {
             'blog': course,
             'blog_posts': course.blog_ids,
         })
