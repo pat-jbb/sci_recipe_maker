@@ -148,7 +148,7 @@
                     <h5 t-if="group != 'no_group'" class="font-weight-bold mt-3">
                         <t t-esc="group"/>
                     </h5>
-                    <ul class="recipe-ingredients list-unstyled card-columns mb-0 pl-4">
+                    <ul t-attf-class="recipe-ingredients list-unstyled {{'card-columns' if len(group_value) > 1 else ''}} mb-0 pl-4">
                         <t t-foreach="group_value" t-as="ingredient">
                             <li>
                                 <!--@formatter:off-->
