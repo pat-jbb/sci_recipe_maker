@@ -89,6 +89,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='category_id']" position="after">
                 <field name="website_id"/>
+                <field name="website_ids"/>
             </xpath>
         </field>
     </record>
@@ -103,6 +104,7 @@
                         <group>
                             <field name="name"/>
                             <field name="website_id"/>
+                            <field name="website_ids"/>
                         </group>
                         <label for="blog_ids" string="Used in: "/>
                         <field name="blog_ids"/>

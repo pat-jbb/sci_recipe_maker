@@ -180,12 +180,13 @@ class RecipeTag(models.Model):
     _inherit = "blog.tag"
 
     website_id = fields.Many2one('website', string='Website', help='Restrict publishing to this website.')
+    website_ids = fields.Many2many('website', string='Websites')
 
     @api.multi
     def can_access_from_current_website(self, website_id=False):
         can_access = True
         for record in self:
-            if (website_id or record.website_id.id) not in (False, request.website.id):
+            if (website_id or record.website_id.id or record.website_id.ids) not in (False, request.website.id):
                 can_access = False
                 continue
         return can_access
@@ -199,10 +200,20 @@ class RecipeCourse(models.Model):
 
     name = fields.Char('Name', required=True, translate=True)
     blog_ids = fields.Many2many('blog.post', string='Recipes')
+    website_ids = fields.Many2many('website', string='Websites')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Course already exists !"),
     ]
+
+    @api.multi
+    def can_access_from_current_website(self, website_id=False):
+        can_access = True
+        for record in self:
+            if (website_id or record.website_id.id or record.website_id.ids) not in (False, request.website.id):
+                can_access = False
+                continue
+        return can_access
 
 
 class RecipeCuisine(models.Model):
@@ -213,7 +224,17 @@ class RecipeCuisine(models.Model):
 
     name = fields.Char('Name', required=True, translate=True)
     blog_ids = fields.Many2many('blog.post', string='Recipes')
+    website_ids = fields.Many2many('website', string='Websites')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Cuisine already exists !"),
     ]
+
+    @api.multi
+    def can_access_from_current_website(self, website_id=False):
+        can_access = True
+        for record in self:
+            if (website_id or record.website_id.id or record.website_id.ids) not in (False, request.website.id):
+                can_access = False
+                continue
+        return can_access

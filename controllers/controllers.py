@@ -19,10 +19,22 @@ class WebsiteBlog(WebsiteBlog):
 
         if not tag.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
+        blog_posts = tag.post_ids
+        pager = request.website.pager(
+            url=request.httprequest.path.partition('/page/')[0],
+            total=len(blog_posts),
+            page=page,
+            step=self._blog_post_per_page,
+        )
+        pager_begin = (page - 1) * self._blog_post_per_page
+        pager_end = page * self._blog_post_per_page
+        blog_posts = blog_posts[pager_begin:pager_end]
 
         return request.render("website_blog.blog_post_short", {
             'blog': tag,
-            'blog_posts': tag.post_ids,
+            'main_object': tag,
+            'blog_posts': blog_posts,
+            'pager': pager,
         })
 
     @http.route([
@@ -36,7 +48,20 @@ class WebsiteBlog(WebsiteBlog):
         if not course.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
+        blog_posts = course.blog_ids
+        pager = request.website.pager(
+            url=request.httprequest.path.partition('/page/')[0],
+            total=len(blog_posts),
+            page=page,
+            step=self._blog_post_per_page,
+        )
+        pager_begin = (page - 1) * self._blog_post_per_page
+        pager_end = page * self._blog_post_per_page
+        blog_posts = blog_posts[pager_begin:pager_end]
+
         return request.render("website_blog.blog_post_short", {
             'blog': course,
-            'blog_posts': course.blog_ids,
+            'main_object': course,
+            'blog_posts': blog_posts,
+            'pager': pager,
         })
