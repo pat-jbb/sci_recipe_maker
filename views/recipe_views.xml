@@ -89,7 +89,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='category_id']" position="after">
                 <field name="website_id"/>
-                <field name="website_ids"/>
+                <field name="website_ids" widget="many2many_tags"/>
             </xpath>
         </field>
     </record>
@@ -104,7 +104,7 @@
                         <group>
                             <field name="name"/>
                             <field name="website_id"/>
-                            <field name="website_ids"/>
+                            <field name="website_ids" widget="many2many_tags"/>
                         </group>
                         <label for="blog_ids" string="Used in: "/>
                         <field name="blog_ids"/>

@@ -179,6 +179,7 @@ class RecipeRecipe(models.Model):
 class RecipeTag(models.Model):
     _inherit = "blog.tag"
 
+    subtitle = fields.Char('Sub Title', translate=True)
     website_id = fields.Many2one('website', string='Website', help='Restrict publishing to this website.')
     website_ids = fields.Many2many('website', string='Websites')
 
@@ -195,11 +196,12 @@ class RecipeTag(models.Model):
 class RecipeCourse(models.Model):
     _name = 'recipe.course'
     _description = 'Course Recipe'
-    _inherit = "website.multi.mixin"
+    _inherit = ['website.multi.mixin', 'mail.thread']
     _order = 'name'
 
     name = fields.Char('Name', required=True, translate=True)
     blog_ids = fields.Many2many('blog.post', string='Recipes')
+    subtitle = fields.Char('Sub Title', translate=True)
     website_ids = fields.Many2many('website', string='Websites')
 
     _sql_constraints = [
@@ -210,7 +212,10 @@ class RecipeCourse(models.Model):
     def can_access_from_current_website(self, website_id=False):
         can_access = True
         for record in self:
-            if (website_id or record.website_id.id or record.website_id.ids) not in (False, request.website.id):
+            print((website_id or record.website_id.id or record.website_id.ids))
+            if (website_id or record.website_id.id) not in (
+            False, request.website.id) or request.website.id in record.website_ids.ids:
+                print('here')
                 can_access = False
                 continue
         return can_access
@@ -219,11 +224,12 @@ class RecipeCourse(models.Model):
 class RecipeCuisine(models.Model):
     _name = 'recipe.cuisine'
     _description = 'Cuisine Recipe'
-    _inherit = "website.multi.mixin"
+    _inherit = ['website.multi.mixin', 'mail.thread']
     _order = 'name'
 
     name = fields.Char('Name', required=True, translate=True)
     blog_ids = fields.Many2many('blog.post', string='Recipes')
+    subtitle = fields.Char('Sub Title', translate=True)
     website_ids = fields.Many2many('website', string='Websites')
 
     _sql_constraints = [
@@ -234,6 +240,7 @@ class RecipeCuisine(models.Model):
     def can_access_from_current_website(self, website_id=False):
         can_access = True
         for record in self:
+
             if (website_id or record.website_id.id or record.website_id.ids) not in (False, request.website.id):
                 can_access = False
                 continue

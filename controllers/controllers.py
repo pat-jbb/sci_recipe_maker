@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo import http
 import werkzeug
+import json
 from odoo.http import request
-from odoo.addons.http_routing.models.ir_http import unslug
 from odoo.addons.website_blog.controllers.main import WebsiteBlog
 from odoo.addons.website.controllers.main import QueryURL
-
 
 class WebsiteBlog(WebsiteBlog):
 
@@ -32,9 +31,14 @@ class WebsiteBlog(WebsiteBlog):
 
         return request.render("website_blog.blog_post_short", {
             'blog': tag,
+            'blog_url': QueryURL(),
+            'state_info': {"state": '', "published": '', "unpublished": ''},
             'main_object': tag,
             'blog_posts': blog_posts,
             'pager': pager,
+            'active_tag_ids': [],
+            'blog_posts_cover_properties': [json.loads(b.cover_properties) for b in blog_posts],
+            'tag_category': [],
         })
 
     @http.route([
@@ -61,7 +65,12 @@ class WebsiteBlog(WebsiteBlog):
 
         return request.render("website_blog.blog_post_short", {
             'blog': course,
+            'blog_url': QueryURL(),
+            'state_info': {"state": '', "published": '', "unpublished": ''},
             'main_object': course,
             'blog_posts': blog_posts,
             'pager': pager,
+            'active_tag_ids': [],
+            'blog_posts_cover_properties': [json.loads(b.cover_properties) for b in blog_posts],
+            'tag_category': [],
         })
