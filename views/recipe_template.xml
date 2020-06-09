@@ -203,14 +203,14 @@
                 <div class="line mt-5"/>
             </div>
         </div>
-        <div class="row" t-if="blog_post.sudo().author_id.image and blog_post.sudo().author_id.about_author">
+        <div class="row" t-if="blog_post.sudo().author_id.about_author">
             <div class="col-lg-12 mt-5">
                 <div class="recipe-about d-flex align-items-center">
                     <t t-if="blog_post.sudo().author_id.gravatar_image_url">
                         <img t-att-src="blog_post.sudo().author_id.gravatar_image_url"
                              class="img img-fluid d-block rounded-circle px-3" height="150" width="150"/>
                     </t>
-                    <div class="recipe-about-author">
+                    <div t-if="blog_post.sudo().author_id.about_author" class="recipe-about-author">
                         <h4 class="mb-2">About
                             <t t-esc="blog_post.sudo().author_id.name"/>
                         </h4>
