@@ -1,19 +1,17 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
-from odoo.tools import html2plaintext
 import json
-from datetime import datetime
 from odoo.http import request
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo import api, fields, models, _
+from odoo.tools import html2plaintext
+from odoo import api, fields, models
 from odoo.addons.http_routing.models.ir_http import slug
 
 ISO8601_FORMAT = "%Y-%m-%dT%H:%M:%S%z"
 
 
 class RecipeRecipe(models.Model):
-    _inherit = "blog.post"
-    _description = "Recipe Maker"
+    _name = 'blog.post'
+    _inherit = ['blog.post', 'image.mixin']
 
     is_recipe = fields.Boolean("Is a Recipe")
     is_featured_gourmet = fields.Boolean("Featured Gourmet")
@@ -34,18 +32,18 @@ class RecipeRecipe(models.Model):
 
     notes = fields.Html("Recipe Notes", translate=True)
     image_caption = fields.Char("Image Caption")
-    image_medium = fields.Binary("Recipe image", attachment=True)
 
     @api.model
-    def _get_hm_format(self, totalMinutes):
-        if totalMinutes == 60:
+    def _get_hm_format(self, t_min):
+        if t_min == 60:
             ptm = "1 hr"
-        elif totalMinutes > 60:
-            totalHours = totalMinutes // 60
-            remainingMinutes = totalMinutes % 60
-            ptm = "%s hrs%s" % (totalHours, remainingMinutes and ' %s mins' % remainingMinutes or '')
+        elif t_min > 60:
+            t_hr = t_min // 60
+            rem_min = t_min % 60
+            rem_min_txt = rem_min and ' %s mins' % rem_min or ''
+            ptm = "%s hrs%s" % (t_hr, rem_min_txt)
         else:
-            ptm = "%s mins" % totalMinutes
+            ptm = "%s mins" % t_min
         return ptm
 
     @api.model
@@ -68,21 +66,22 @@ class RecipeRecipe(models.Model):
 
     @api.model
     def has_notes(self):
-        if bool(self.notes) and self.notes == "<p><br></p>":
-            return False
-        return True
+        return html2plaintext(self.notes) and True or False
 
-    @api.multi
     def get_structured_data(self):
-        # TODO: Add rating, nutrition, video schema
+        # TODO: Add rating, nutrition, video schema, use py library instead?
         self.ensure_one()
         current_website = self.env['website'].get_current_website()
         base_url = current_website and current_website.domain.rstrip('/')
+        # TODO: Update to get the SEOd Blog URL
         post_url = '%s/blog/%s/post/%s' % (base_url, slug(self.blog_id), slug(self))
-        author_name = self.sudo().author_id.name
+        author_id = self.sudo().author_id
+        author_name = author_id.name
+        pub_date = self.published_date
+        wr_date = self.write_date
 
-        published_date = self.published_date and self.published_date.strftime(ISO8601_FORMAT) or ""
-        write_date = self.write_date and self.write_date.strftime(ISO8601_FORMAT) or ""
+        published_date = pub_date and pub_date.strftime(ISO8601_FORMAT) or ""
+        write_date = wr_date and wr_date.strftime(ISO8601_FORMAT) or ""
 
         schema_data = OrderedDict()
         schema_data["@context"] = "https://schema.org"
@@ -116,18 +115,18 @@ class RecipeRecipe(models.Model):
             "description": "%s" % self.website_meta_description
         })
 
-        if self.sudo().author_id.gravatar_image_url and self.sudo().author_id.about_author:
+        if author_id.gravatar_image_url and author_id.about_author:
             schema_data["@graph"].append({
                 "@type": "Person",
                 "name": "%s" % author_name,
                 "image": {
                     "@type": "ImageObject",
                     "@id": "%s/#authorlogo" % base_url,
-                    "url": "%s" % self.sudo().author_id.gravatar_image_url or '',
+                    "url": "%s" % author_id.gravatar_image_url or '',
                     "caption": "%s" % author_name
                 },
-                "description": "%s" % self.sudo().author_id.about_author,
-                "sameAs": self.sudo().author_id.get_partner_social()
+                "description": "%s" % html2plaintext(author_id.about_author),
+                "sameAs": author_id.get_partner_social()
             })
 
         if self.is_recipe and self.ingredient_line_ids:
@@ -141,7 +140,7 @@ class RecipeRecipe(models.Model):
                 },
                 "description": "%s" % self.subtitle,
                 "datePublished": "%s" % published_date,
-                # TODO: Implement multiple images here
+                # TODO: Implement multiple images here, change URL
                 "image": ["%s/web/image/blog.post/%s/image_medium" % (base_url, self.id)],
                 "prepTime": "PT%sM" % self.prep_time,
                 "cookTime": "PT%sM" % self.cook_time,
@@ -183,7 +182,6 @@ class RecipeTag(models.Model):
     website_id = fields.Many2one('website', string='Website', help='Restrict publishing to this website.')
     website_ids = fields.Many2many('website', string='Websites')
 
-    @api.multi
     def can_access_from_current_website(self, website_id=False):
         can_access = True
         for record in self:
@@ -208,14 +206,10 @@ class RecipeCourse(models.Model):
         ('name_uniq', 'unique (name)', "Course already exists !"),
     ]
 
-    @api.multi
     def can_access_from_current_website(self, website_id=False):
         can_access = True
         for record in self:
-            print((website_id or record.website_id.id or record.website_id.ids))
-            if (website_id or record.website_id.id) not in (
-            False, request.website.id) or request.website.id in record.website_ids.ids:
-                print('here')
+            if (website_id or record.website_id.id) not in (False, request.website.id) or request.website.id in record.website_ids.ids:
                 can_access = False
                 continue
         return can_access
@@ -236,7 +230,6 @@ class RecipeCuisine(models.Model):
         ('name_uniq', 'unique (name)', "Cuisine already exists !"),
     ]
 
-    @api.multi
     def can_access_from_current_website(self, website_id=False):
         can_access = True
         for record in self:

@@ -21,7 +21,7 @@
                 <group string="Recipe Options" attrs="{'invisible': [('is_recipe', '=', False)]}">
                     <notebook>
                         <page string="Recipe Details" name="recipe_details">
-                            <field name="image_medium" widget="image" class="oe_avatar float-left mr-3" nolabel="1"/>
+                            <field name="image_1920" widget="image" class="oe_avatar float-left mr-3" nolabel="1" options="{'image_preview': 'image_128'}"/>
                             <div class="oe_title">
                                 <label for="author" class="font-weight-bold"/>
                                 <div name="options">
@@ -68,7 +68,7 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="is_group" style="width: 5%"/>
                                     <field name="name"/>
-                                    <field name="image_medium" widget="image" class="oe_avatar"
+                                    <field name="image_1920" widget="image" class="oe_avatar"
                                            options="{'size': [50, 50]}"/>
                                 </tree>
                             </field>
@@ -78,18 +78,6 @@
                         </page>
                     </notebook>
                 </group>
-            </xpath>
-        </field>
-    </record>
-
-    <record model='ir.ui.view' id='blog_tag_recipe_form'>
-        <field name="name">blog.tag.recipe.form</field>
-        <field name="model">blog.tag</field>
-        <field name="inherit_id" ref="website_blog.blog_tag_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='category_id']" position="after">
-                <field name="website_id"/>
-                <field name="website_ids" widget="many2many_tags"/>
             </xpath>
         </field>
     </record>
@@ -114,7 +102,6 @@
         </field>
     </record>
 
-    <!-- TREE VIEW OF FAQ -->
     <record model='ir.ui.view' id='recipe_course_tree'>
         <field name="name">recipe.course.tree</field>
         <field name="model">recipe.course</field>
@@ -125,11 +112,9 @@
         </field>
     </record>
 
-    <!-- ACTION FOR FAQ -->
     <record model='ir.actions.act_window' id='action_recipe_course'>
         <field name="name">Course</field>
         <field name="res_model">recipe.course</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
@@ -164,7 +149,6 @@
         </field>
     </record>
 
-    <!-- TREE VIEW OF FAQ -->
     <record model='ir.ui.view' id='recipe_cuisine_tree'>
         <field name="name">recipe.cuisine.tree</field>
         <field name="model">recipe.cuisine</field>
@@ -175,11 +159,9 @@
         </field>
     </record>
 
-    <!-- ACTION FOR FAQ -->
     <record model='ir.actions.act_window' id='action_recipe_cuisine'>
         <field name="name">Cuisine</field>
         <field name="res_model">recipe.cuisine</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">

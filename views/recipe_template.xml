@@ -82,7 +82,7 @@
         </i>
         <div class="row align-items-center">
             <div class="col-lg-6 mt-3">
-                <span t-field="blog_post.image_medium"
+                <span t-field="blog_post.image_1920"
                       t-options="{'widget': 'image', 'class': 'lazy lazyload-disable', 'alt': blog_post.image_caption or '%s Image' % blog_post.name}"
                       t-att-alt="blog_post.name"/>
             </div>
@@ -234,28 +234,6 @@
         </div>
     </template>
 
-    <template id="blog_post_complete_inherited" active="False" customize_show="True"
-              inherit_id="website_blog.blog_post_complete" name="Recipe Post Override">
-        <xpath expr="//t[@t-call='website_blog.index']" position="inside">
-            <t t-set="head">
-                <script type="application/ld+json" t-raw="blog_post.get_structured_data()"/>
-            </t>
-            <section t-if="blog_post.is_recipe" class="recipe mt-5">
-                <div class="container">
-                    <t t-call="sci_recipe_maker.recipe_post_template"/>
-                </div>
-            </section>
-        </xpath>
-        <xpath expr="//div[hasclass('blog_header')]" position="attributes">
-            <attribute name="t-if">not blog_post.is_recipe</attribute>
-        </xpath>
-        <xpath expr="//div[hasclass('blog_content')]" position="attributes">
-            <attribute name="t-if">not blog_post.is_recipe</attribute>
-        </xpath>
-        <xpath expr="//div[hasclass('o_sharing_links')]" position="attributes">
-            <attribute name="t-if">not blog_post.is_recipe</attribute>
-        </xpath>
-    </template>
 
 
 </odoo>

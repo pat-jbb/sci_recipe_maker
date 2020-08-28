@@ -1,11 +1,11 @@
-from odoo import api, fields, models, _
+from odoo import fields, models
 
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    about_author = fields.Html("About Author", help="About the Author description in the blog post")
-    gravatar_image_url = fields.Char("Gravatar Image URL", help="Blog post author Gravatar image url")
+    about_author = fields.Html("About Author", help="The About the Author description in the blog post")
+    gravatar_image_url = fields.Char("Gravatar Image URL", help="Gravatar URL of the Blog Author")
     social_twitter = fields.Char('Twitter Account')
     social_facebook = fields.Char('Facebook Account')
     social_github = fields.Char('GitHub Account')
@@ -14,7 +14,6 @@ class ResPartner(models.Model):
     social_googleplus = fields.Char('Google+ Account')
     social_instagram = fields.Char('Instagram Account')
 
-    @api.multi
     def get_partner_social(self):
         self.ensure_one()
         socials = []
