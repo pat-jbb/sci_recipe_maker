@@ -66,22 +66,14 @@
     </template>
 
     <template id="recipe_post_template" name="Recipe Post Template">
-        <div t-attf-class="row {{'css_non_editable_mode_hidden' if 'Start writing here...' in blog_post.content or not blog_post.content else ''}}">
-            <div class="col-lg-12">
-                <div t-field="blog_post.content" class="oe_no_empty"/>
-                <div class="line my-5"/>
-            </div>
-        </div>
-        <h1 t-field="blog_post.name" id="blog_post_name" class="text-black" t-att-data-blog-id="blog_post.id"
-            placeholder="Blog Post Title"/>
         <i>
             <span t-field="blog_post.post_date" t-options="{&quot;format&quot;: &quot;MMMM dd, yyyy&quot;}"/>
             by
             <span t-esc="blog_post.sudo().author_id.name"/>
-            <a class="ml-3" href="#comments">Leave a Comment</a>
+            <a class="ml-3" href="#discussion">Leave a Comment</a>
         </i>
         <div class="row align-items-center">
-            <div class="col-lg-6 mt-3">
+            <div class="col-lg-6 mt-3 mb-5">
                 <span t-field="blog_post.image_1920"
                       t-options="{'widget': 'image', 'class': 'lazy lazyload-disable', 'alt': blog_post.image_caption or '%s Image' % blog_post.name}"
                       t-att-alt="blog_post.name"/>
@@ -145,7 +137,7 @@
             </div>
         </div>
         <div t-if="blog_post.ingredient_line_ids" class="row">
-            <div class="col-lg-12 mt-5">
+            <div class="col-lg-12 mb-5">
                 <h2 class="text-black mb-3">Ingredients</h2>
                 <t t-set="ingredient_groups" t-value="blog_post.get_recipe_groups(blog_post.ingredient_line_ids)"/>
                 <t t-foreach="ingredient_groups" t-as="group">
@@ -179,7 +171,7 @@
             </div>
         </div>
         <div t-if="blog_post.instruction_line_ids" class="row">
-            <div class="col-lg-12 mt-5">
+            <div class="col-lg-12 mb-5">
                 <h2 class="text-black mb-3">Instructions</h2>
                 <t t-set="instruction_groups" t-value="blog_post.get_recipe_groups(blog_post.instruction_line_ids)"/>
                 <t t-foreach="instruction_groups" t-as="group">
@@ -197,14 +189,14 @@
                 <div class="line mt-5"/>
             </div>
         </div>
-        <div t-attf-class="row {{'css_non_editable_mode_hidden' if blog_post.notes == '&lt;p&gt;&lt;br&gt;&lt;/p&gt;' or not blog_post.notes else ''}}">
-            <div class="col-lg-12 mt-5">
+        <div t-attf-class="row {{'css_non_editable_mode_hidden' if not blog_post.has_notes() else ''}}">
+            <div class="col-lg-12 mb-5">
                 <div t-field="blog_post.notes" class="oe_no_empty"/>
                 <div class="line mt-5"/>
             </div>
         </div>
-        <div t-attf-class="row {{'css_non_editable_mode_hidden' if blog_post.sudo().author_id.about_author == '&lt;p&gt;&lt;br&gt;&lt;/p&gt;' or not blog_post.sudo().author_id.about_author else ''}}">
-            <div class="col-lg-12 mt-5">
+        <div t-attf-class="row {{'css_non_editable_mode_hidden' if not blog_post.sudo().author_id.has_about_author() else ''}}">
+            <div class="col-lg-12 mb-5">
                 <div class="recipe-about d-flex align-items-center">
                     <t t-if="blog_post.sudo().author_id.gravatar_image_url">
                         <img t-att-src="blog_post.sudo().author_id.gravatar_image_url"
@@ -220,20 +212,27 @@
                 <div class="line mt-5"/>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12 mt-5">
-                <t t-if="website.user_id != user_id">
-                    <h2 class="text-black mb-3">Leave a comment</h2>
-                </t>
-                <div id="comments">
-                    <t t-call="portal.message_thread">
-                        <t t-set="object" t-value="blog_post"/>
-                    </t>
-                </div>
-            </div>
-        </div>
     </template>
 
+    <template id="recipe_post_template_xpath" inherit_id="website_blog.blog_post_content" name="Recipe Post Template Xpath">
+        <xpath expr="//div[@t-field='blog_post.content']" position="attributes">
+            <attribute name="t-if">not blog_post.is_recipe</attribute>
+        </xpath>
+        <xpath expr="//div[@t-field='blog_post.content']" position="after">
+            <t t-call="sci_recipe_maker.recipe_post_template"/>
+        </xpath>
+    </template>
 
+    <template id="blog_post_inherited" inherit_id="website_blog.blog_post_complete" name="Blog Post Inherited">
+        <xpath expr="//section[@id='o_wblog_post_main']" position="attributes">
+            <attribute name="t-attf-class" separator=" " add="recipe"/>
+        </xpath>
+    </template>
+
+    <template id="post_teaser_inherited" inherit_id="website_blog.post_teaser" name="Blog Post Teaser Inherited">
+        <xpath expr="//a[1]" position="attributes">
+            <attribute name="t-if">not blog_post.is_recipe</attribute>
+        </xpath>
+    </template>
 
 </odoo>

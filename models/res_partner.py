@@ -1,5 +1,5 @@
-from odoo import fields, models
-
+from odoo import api, fields, models
+from odoo.tools import html2plaintext
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
@@ -32,3 +32,7 @@ class ResPartner(models.Model):
         if self.social_instagram:
             socials.append(self.social_instagram)
         return socials
+
+    @api.model
+    def has_about_author(self):
+        return html2plaintext(self.about_author) and True or False
